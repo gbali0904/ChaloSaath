@@ -3,11 +3,14 @@ import 'package:chalosaath/features/authorization/data/authState.dart';
 import 'package:chalosaath/features/authorization/domain/get_userType_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../domain/repositories/auth_repository.dart';
+
 class AuthorizationBloc extends Bloc<AuthEvent, AuthState>
 {
   final GetUsertypeData getUsertypeData;
+  final AuthRepository repository;
 
-  AuthorizationBloc(this.getUsertypeData) : super(AuthLoading()) {
+  AuthorizationBloc(this.getUsertypeData, this.repository) : super(AuthLoading()) {
     on<LoadUserTypeData>((event, emit) {
       emit(AuthLoading());
       final data = getUsertypeData();
@@ -16,6 +19,20 @@ class AuthorizationBloc extends Bloc<AuthEvent, AuthState>
 
     on<RoleChanged>((event, emit) {
       emit(RoleChangedData(event.role));
+    });
+
+    on<RegisterUser>((event, emit) async {
+      emit(AuthLoading());
+
+      try {
+        await repository.registerUser(
+          userData: event.userData,
+        );
+        emit(AuthSuccess());
+      } catch (e) {
+        emit(AuthFailure(e.toString()));
+      }
+
     });
 
   }

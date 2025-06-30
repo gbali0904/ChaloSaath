@@ -13,3 +13,10 @@ class RoleChangedData extends AuthState {
   final String data;
   RoleChangedData(this.data);
 }
+
+class AuthSuccess extends AuthState {}
+
+class AuthFailure extends AuthState {
+  final String message;
+  AuthFailure(this.message);
+}

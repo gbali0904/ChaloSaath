@@ -16,6 +16,33 @@ class UserModel {
     this.carNumber,
     this.password,
   });
+  UserModel copyWith({
+    String? uid,
+    String? fullName,
+    String? email,
+    String? phone,
+    String? role,
+    String? carNumber,
+  }) {
+    return UserModel(
+      uid: uid ?? this.uid,
+      fullName: fullName ?? this.fullName,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      role: role ?? this.role,
+      carNumber: carNumber ?? this.carNumber,
+    );
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      "uid": uid,
+      "fullName": fullName,
+      "email": email,
+      "phone": phone,
+      "role": role,
+      "carNumber": carNumber,
+    };
+  }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(

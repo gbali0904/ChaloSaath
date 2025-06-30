@@ -40,18 +40,38 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder(
-      bloc: widget.bloc,
-      builder: (context, state) {
-        if (state is UserTypeLoaded) {
-          userTypedata = state.data;
-          return buildUI();
-        } else if (state is RoleChangedData) {
-          selectedUserType = state.data;
-        }
-        return buildUI();
-      },
+    return BlocProvider(
+      create: (_) => widget.bloc,
+      child: BlocListener<AuthorizationBloc, AuthState>(
+        listener: (context, state) {
+          if (state is UserTypeLoaded) {
+            setState(() {
+
+              userTypedata = state.data;
+            });
+          } else if (state is RoleChangedData) {
+            setState(() {
+
+              selectedUserType = state.data;
+            });
+          }else if (state is AuthLoading) {
+            // Show loading spinner
+          } else if (state is AuthSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Registration successful")),
+            );
+            Navigator.pop(context);
+          } else if (state is AuthFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+            print("${state.message}");
+          }
+        },
+        child: buildUI(),
+      ),
     );
+
   }
 
   buildUI() {
@@ -112,7 +132,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   onChanged: (value) {
                     setState(() => selectedUserType = value);
                     widget.bloc.add(RoleChanged(value!));
-                    _formKey.currentState?.validate();
                     carNumberController.text = "";                  },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -316,10 +335,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ), // underline on focus
                     ),
                   ),
-                  validator: (value) =>
-                  value!.isEmpty ? "Enter password" : null,
+                  validator: (value) {
+                    if (value!.isEmpty) return "Enter valid Password";
+                    if (value.length != 7) return "Password should be at least 6 characters";
+
+                    return null;
+                  },
                   onChanged: (value) {
-                   
                     _formKey.currentState?.validate();
                   },
                 ),
@@ -356,6 +378,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     if (value != passwordController.text) {
                       return "Passwords do not match";
                     }
+
                     return null;
                   },
                   onChanged: (value) {
@@ -380,7 +403,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 : '',
                             password: passwordController.text,
                         );
-
+                        widget.bloc.add(RegisterUser(user));
                       }
                     },
                     style: ElevatedButton.styleFrom(
