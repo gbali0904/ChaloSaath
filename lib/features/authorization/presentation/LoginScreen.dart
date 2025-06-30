@@ -3,7 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../theme/app_colors.dart';
+import '../../../theme/app_colors.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -134,7 +134,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         decoration: TextDecoration.underline,
                         fontWeight: FontWeight.bold,
                       ),
-                      recognizer: TapGestureRecognizer()..onTap = () {},
+                      recognizer: TapGestureRecognizer()..onTap = () {
+                        Navigator.pushReplacementNamed(context, "/signup");
+                      },
                     ),
                   ],
                 ),
