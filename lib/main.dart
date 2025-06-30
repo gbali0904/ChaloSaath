@@ -2,6 +2,7 @@ import 'package:chalosaath/services/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'core/routes/RouteGenerator.dart';
 
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setupLocator();
