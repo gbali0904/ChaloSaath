@@ -1,6 +1,7 @@
 import 'package:chalosaath/features/onboarding/presentation/onboarding_bloc.dart';
 import 'package:flutter/material.dart';
 
+import '../../features/login/LoginScreen.dart';
 import '../../features/main/MainScreen.dart';
 import '../../features/onboarding/presentation/OnboardingScreen.dart';
 import '../../features/splash/SplashScren.dart';
@@ -12,7 +13,9 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => SplashScreen());
       case '/onboarding':
         return MaterialPageRoute(builder: (_) => OnboardingScreen(bloc: getX<OnboardingBloc>(),));
-      case '/main':
+      case '/login':
+        return MaterialPageRoute(builder: (_) => LoginScreen());
+        case '/main':
         return MaterialPageRoute(builder: (_) => MainScreen());
       default:
         return MaterialPageRoute(

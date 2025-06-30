@@ -18,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     final seen = getX<AppPreference>().getBool(AppKey.onboardingSeen);
     Timer(Duration(seconds: 1), () {
-     Navigator.pushReplacementNamed(context,  seen == false ? "/onboarding" : "/main");
+     Navigator.pushReplacementNamed(context,  seen == false ? "/onboarding" : "/login");
     });
   }
 

@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 
+import '../../theme/app_colors.dart';
+
 class CustomScaffold extends StatelessWidget {
   final Widget body;
   final bool backpress;
@@ -16,19 +18,19 @@ class CustomScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
         automaticallyImplyLeading: backpress,
         title: const Text(
           "Chalo Saath",
           style: TextStyle(
-              color: Colors.white,
+              color: AppColors.white,
               fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        backgroundColor: Colors.orange,
+        backgroundColor:AppColors.primary,
         iconTheme: IconThemeData(
-          color: Colors.white,
+          color: AppColors.white,
         ),
         leading: backpress
             ? IconButton(
