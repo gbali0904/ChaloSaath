@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "852315849296",
+    "project_id": "chalosaath-44840",
+    "storage_bucket": "chalosaath-44840.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:852315849296:android:3cfd898435a4efab330755",
+        "android_client_info": {
+          "package_name": "com.app.chalosaath"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEdARfF1n89cpHgG9-9qdjcphnkbQdxfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
