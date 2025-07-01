@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 abstract class AuthState {}
 
 class AuthInitial extends AuthState {}
@@ -16,6 +18,10 @@ class RoleChangedData extends AuthState {
 
 class AuthSuccess extends AuthState {}
 
+class LoginSuccess extends AuthState {
+  final UserCredential userCredential;
+  LoginSuccess(this.userCredential);
+}
 class AuthFailure extends AuthState {
   final String message;
   AuthFailure(this.message);

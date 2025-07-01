@@ -15,7 +15,7 @@ class RouteGenerator {
       case '/onboarding':
         return MaterialPageRoute(builder: (_) => OnboardingScreen(bloc: getX<OnboardingBloc>(),));
       case '/login':
-        return MaterialPageRoute(builder: (_) => LoginScreen());
+        return MaterialPageRoute(builder: (_) => LoginScreen(bloc :getX<AuthorizationBloc>()));
         case '/signup':
         return MaterialPageRoute(builder: (_) => SignUpScreen(bloc :getX<AuthorizationBloc>()));
         case '/main':

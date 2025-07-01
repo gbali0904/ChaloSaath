@@ -18,8 +18,6 @@ class FirebaseAuthRepository implements AuthRepository {
       );
 
       final uid = userCredential.user!.uid;
-
-      // Save extra data to Firestore
       await _firestore
           .collection('users')
           .doc(uid)
@@ -31,5 +29,10 @@ class FirebaseAuthRepository implements AuthRepository {
         throw Exception(e.message ?? 'Registration failed');
       }
     }
+  }
+
+  @override
+  Future<UserCredential> loginUser({required String email, required String password}) {
+    return _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
   }
 }

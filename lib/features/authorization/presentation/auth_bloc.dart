@@ -35,6 +35,21 @@ class AuthorizationBloc extends Bloc<AuthEvent, AuthState>
 
     });
 
+    on<LoginIN>((event, emit) async {
+      emit(AuthLoading());
+
+      try {
+        var userCredential = await repository.loginUser(
+          email: event.email,
+          password: event.password,
+        );
+        emit(LoginSuccess(userCredential!));
+      } catch (e) {
+        emit(AuthFailure(e.toString()));
+      }
+
+    });
+
   }
 
 }

@@ -11,3 +11,8 @@ class RegisterUser extends AuthEvent{
   final UserModel userData;
   RegisterUser(this.userData);
 }
+class LoginIN extends AuthEvent{
+  String email;
+  String password;
+  LoginIN( this.email,  this.password) ;
+}
