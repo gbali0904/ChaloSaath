@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:chalosaath/features/helper/CustomScaffold.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../core/storage/app_key.dart';
+import '../../../core/storage/app_preferences.dart';
+import '../../../services/service_locator.dart';
 import '../../../theme/app_colors.dart';
 import '../../loader/CustomLoader.dart';
 import '../data/authEvent.dart';
@@ -30,20 +35,23 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocProvider(
       create: (_) => widget.bloc,
       child: BlocListener<AuthorizationBloc, AuthState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is AuthLoading) {
             setState(() {
-              isLoading= true;
+              isLoading = true;
             });
           } else if (state is LoginSuccess) {
             setState(() {
-              isLoading= false;
+              isLoading = false;
             });
             print("userData ${state.userCredential.user?.email}");
-            
+            await getX<AppPreference>().setBool(AppKey.isLogin, true);
+            String data = jsonEncode( state.userCredential.user);
+            await getX<AppPreference>().setString(AppKey.userData,data);
+          Navigator.pushReplacementNamed(context, "/home");
           } else if (state is AuthFailure) {
             setState(() {
-              isLoading= false;
+              isLoading = false;
             });
             ScaffoldMessenger.of(
               context,
@@ -57,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   buildUI() {
-    return  CustomScaffold(
+    return CustomScaffold(
       body: Stack(
         children: [
           Container(
@@ -98,7 +106,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             'assets/email.png',
                             height: 10,
                             width: 10,
-                            color: Colors.black, // optional: apply color overlay
+                            color:
+                                Colors.black, // optional: apply color overlay
                           ),
                         ),
                         iconColor: Colors.black,
@@ -132,7 +141,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             'assets/password.png',
                             height: 10,
                             width: 10,
-                            color: Colors.black, // optional: apply color overlay
+                            color:
+                                Colors.black, // optional: apply color overlay
                           ),
                         ),
                         iconColor: Colors.black,
@@ -163,7 +173,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            widget.bloc.add(LoginIN(emailController.text , passwordController.text));
+                            widget.bloc.add(
+                              LoginIN(
+                                emailController.text,
+                                passwordController.text,
+                              ),
+                            );
                           }
                         },
                         style: ElevatedButton.styleFrom(

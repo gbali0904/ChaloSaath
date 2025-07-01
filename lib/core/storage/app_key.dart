@@ -1,5 +1,7 @@
 enum AppKey {
   onboardingSeen,
+  isLogin,
+  userData,
 }
 
 extension AppKeyString on AppKey {
@@ -7,6 +9,10 @@ extension AppKeyString on AppKey {
     switch (this) {
       case AppKey.onboardingSeen:
         return 'onboarding_seen';
+      case AppKey.isLogin:
+        return 'isLogin';
+      case AppKey.userData:
+        return 'userData';
     }
   }
 }

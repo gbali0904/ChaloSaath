@@ -17,8 +17,9 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     final seen = getX<AppPreference>().getBool(AppKey.onboardingSeen);
+    final isLogin = getX<AppPreference>().getBool(AppKey.isLogin);
     Timer(Duration(seconds: 1), () {
-     Navigator.pushReplacementNamed(context,  seen == false ? "/onboarding" : "/login");
+     Navigator.pushReplacementNamed(context,  seen == false ? "/onboarding" :isLogin == false? "/login":"/home");
     });
   }
 

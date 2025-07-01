@@ -6,12 +6,14 @@ import '../../theme/app_colors.dart';
 class CustomScaffold extends StatelessWidget {
   final Widget body;
   final bool backpress;
+  final bool appbar;
   final VoidCallback? onBackPress;
 
   const CustomScaffold({
     super.key,
     required this.body,
     this.backpress = false,
+    this.appbar = true,
     this.onBackPress,
   });
 
@@ -19,7 +21,8 @@ class CustomScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: AppBar(
+      appBar: appbar == true ?
+      AppBar(
         automaticallyImplyLeading: backpress,
         title: const Text(
           "Chalo Saath",
@@ -44,9 +47,11 @@ class CustomScaffold extends StatelessWidget {
           },
         )
             : null,
-      ),
+      ):null,
 
       body: body,
     );
   }
 }
+
+
