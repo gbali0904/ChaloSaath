@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import '../../features/authorization/presentation/AuthScreen.dart';
 import '../../features/authorization/presentation/LoginScreen.dart';
 import '../../features/authorization/presentation/SignUpScreen.dart';
-import '../../features/home/HomeScreen.dart';
+import '../../features/home/presentation/HomeScreen.dart';
 import '../../features/main/MainScreen.dart';
 import '../../features/onboarding/presentation/OnboardingScreen.dart';
+import '../../features/profile/presentation/ProfileScreen.dart';
 import '../../features/splash/SplashScren.dart';
 import '../../services/service_locator.dart';
 
@@ -31,6 +32,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => HomeScreen());
         case '/main':
         return MaterialPageRoute(builder: (_) => MainScreen());
+        case '/profile':
+        return MaterialPageRoute(builder: (_) => ProfileScreen());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

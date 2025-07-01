@@ -7,6 +7,7 @@ class CustomScaffold extends StatelessWidget {
   final Widget body;
   final bool backpress;
   final bool appbar;
+  final bool profile;
   final VoidCallback? onBackPress;
 
   const CustomScaffold({
@@ -14,6 +15,7 @@ class CustomScaffold extends StatelessWidget {
     required this.body,
     this.backpress = false,
     this.appbar = true,
+    this.profile = false,
     this.onBackPress,
   });
 
@@ -47,6 +49,14 @@ class CustomScaffold extends StatelessWidget {
           },
         )
             : null,
+        actions: [
+          ?profile == false ? IconButton(
+            icon: const Icon(Icons.account_circle, size: 28),
+            onPressed: () {
+              Navigator.pushNamed(context, "/profile"); // or your desired route
+            },
+          ): null,
+        ],
       ):null,
 
       body: body,

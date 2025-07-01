@@ -4,6 +4,7 @@ enum AppKey {
   email,
   uid,
   userData,
+  isFirstLaunch,
 }
 
 extension AppKeyString on AppKey {
@@ -19,6 +20,8 @@ extension AppKeyString on AppKey {
         return 'email';
       case AppKey.uid:
         return 'uid';
+      case AppKey.isFirstLaunch:
+        return 'isFirstLaunch';
     }
   }
 }
