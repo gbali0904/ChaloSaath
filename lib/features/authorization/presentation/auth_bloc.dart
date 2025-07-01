@@ -4,6 +4,7 @@ import 'package:chalosaath/features/authorization/domain/get_userType_data.dart'
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../data/user_model.dart';
 import '../domain/repositories/auth_repository.dart';
 
 class AuthorizationBloc extends Bloc<AuthEvent, AuthState>
@@ -29,7 +30,7 @@ class AuthorizationBloc extends Bloc<AuthEvent, AuthState>
         await repository.registerUser(
           userData: event.userData,
         );
-       // emit(AuthSuccess());
+        emit(AuthSuccess());
       } catch (e) {
         emit(AuthFailure(e.toString()));
       }
@@ -41,12 +42,27 @@ class AuthorizationBloc extends Bloc<AuthEvent, AuthState>
       emit(AuthLoading());
       try {
         final UserCredential? userCredential =  await repository.googleLogin();
-        emit(AuthSuccess(userCredential!));
+        emit(LoginSuccess(userCredential!));
       } catch (e) {
         emit(AuthFailure(e.toString()));
       }
 
     });
+
+    on<LoginIN>((event, emit) async {
+      emit(AuthLoading());
+
+      try {
+        var userCredential = await repository.loginUser(
+          email: event.email,
+          password: event.password,
+        );
+        emit(LoginSuccess(userCredential!));
+      } catch (e) {
+        emit(AuthFailure(e.toString()));
+      }
+    });
+
 /*
     on<SignInWithWhatsApp>((event, emit) async {
       emit(AuthLoading());

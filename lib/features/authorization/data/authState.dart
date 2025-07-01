@@ -16,11 +16,11 @@ class RoleChangedData extends AuthState {
   RoleChangedData(this.data);
 }
 
-class AuthSuccess extends AuthState {
-  final UserCredential data;
-  AuthSuccess(this.data);
+class AuthSuccess extends AuthState {}
+class LoginSuccess extends AuthState {
+  final UserCredential userCredential;
+  LoginSuccess(this.userCredential);
 }
-
 class AuthFailure extends AuthState {
   final String message;
   AuthFailure(this.message);

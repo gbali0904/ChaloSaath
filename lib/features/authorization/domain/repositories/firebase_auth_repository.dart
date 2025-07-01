@@ -15,18 +15,10 @@ class FirebaseAuthRepository implements AuthRepository {
   @override
   Future<void> registerUser({required UserModel userData}) async {
     try {
-      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: userData.email,
-        password: userData.password.toString(),
-      );
-
-      final uid = userCredential.user!.uid;
-
-      // Save extra data to Firestore
       await _firestore
           .collection('users')
-          .doc(uid)
-          .set(userData.copyWith(uid: uid).toJson());
+          .doc(userData.uid)
+          .set(userData.toJson());
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         throw Exception('Email already exists');
@@ -38,25 +30,31 @@ class FirebaseAuthRepository implements AuthRepository {
 
   @override
   Future<UserCredential> googleLogin() async {
-      try {
-        final googleUser = await _googleSignIn.signIn();
-        if (googleUser == null) {
-          throw Exception('Login cancelled');
-        }
-
-        final googleAuth = await googleUser.authentication;
-        final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
-
-        return await _firebaseAuth.signInWithCredential(credential);
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'email-already-in-use') {
-          throw Exception('Email already exists');
-        } else {
-          throw Exception(e.message ?? 'Registration failed');
-        }
+    try {
+      final googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        throw Exception('Login cancelled');
       }
+
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      return await _firebaseAuth.signInWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        throw Exception('Email already exists');
+      } else {
+        throw Exception(e.message ?? 'Registration failed');
+      }
+    }
+  }
+
+  Future<UserCredential> loginUser(
+      {required String email, required String password}) {
+    return _firebaseAuth.signInWithEmailAndPassword(
+        email: email, password: password);
   }
 }

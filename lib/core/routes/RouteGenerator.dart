@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../features/authorization/presentation/AuthScreen.dart';
 import '../../features/authorization/presentation/LoginScreen.dart';
 import '../../features/authorization/presentation/SignUpScreen.dart';
+import '../../features/home/HomeScreen.dart';
 import '../../features/main/MainScreen.dart';
 import '../../features/onboarding/presentation/OnboardingScreen.dart';
 import '../../features/splash/SplashScren.dart';
@@ -23,12 +24,12 @@ class RouteGenerator {
           builder: (_) => AuthScreen(bloc: getX<AuthorizationBloc>()),
         );
       case '/login':
-        return MaterialPageRoute(builder: (_) => LoginScreen());
-      case '/signup':
-        return MaterialPageRoute(
-          builder: (_) => SignUpScreen(bloc: getX<AuthorizationBloc>()),
-        );
-      case '/main':
+        return MaterialPageRoute(builder: (_) => LoginScreen(bloc :getX<AuthorizationBloc>()));
+        case '/signup':
+        return MaterialPageRoute(builder: (_) => SignUpScreen(bloc :getX<AuthorizationBloc>()));
+        case '/home':
+        return MaterialPageRoute(builder: (_) => HomeScreen());
+        case '/main':
         return MaterialPageRoute(builder: (_) => MainScreen());
       default:
         return MaterialPageRoute(

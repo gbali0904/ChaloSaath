@@ -18,3 +18,8 @@ class SignInWithWhatsApp extends AuthEvent {
   final String phoneNumber;
   SignInWithWhatsApp(this.phoneNumber);
 }
+class LoginIN extends AuthEvent{
+  String email;
+  String password;
+  LoginIN( this.email,  this.password) ;
+}
