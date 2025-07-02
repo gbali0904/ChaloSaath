@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-
-import '../../../firebase/domain/BaseFirebaseService.dart';
+import '../../../data_providers/domain/BaseFirebaseService.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../data/user_model.dart';
 

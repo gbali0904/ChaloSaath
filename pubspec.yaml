@@ -43,16 +43,10 @@ dependencies:
   google_fonts: ^6.1.0
   uuid: ^4.2.2
   google_sign_in: ^6.2.1
-  flutter_google_places: ^0.3.0
-  google_maps_webservice: ^0.0.20-nullsafety.5
-  google_api_headers: ^1.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mockito: ^5.4.2
-  firebase_auth_mocks: ^1.1.0
-  cloud_firestore_mocks: ^0.3.0
 
 
   # The "flutter_lints" package below contains a set of recommended lints to
