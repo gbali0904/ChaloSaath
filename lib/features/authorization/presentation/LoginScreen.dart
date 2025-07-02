@@ -8,8 +8,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/storage/app_key.dart';
 import '../../../core/storage/app_preferences.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../services/service_locator.dart';
-import '../../../theme/app_colors.dart';
 import '../../loader/CustomLoader.dart';
 import '../data/authEvent.dart';
 import '../data/authState.dart';

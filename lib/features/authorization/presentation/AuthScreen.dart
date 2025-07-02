@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/storage/app_key.dart';
 import '../../../core/storage/app_preferences.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../services/service_locator.dart';
-import '../../../theme/app_colors.dart';
 import '../../helper/CustomScaffold.dart';
 import '../../loader/CustomLoader.dart';
 import '../data/authEvent.dart';

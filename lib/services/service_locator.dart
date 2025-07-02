@@ -6,8 +6,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../core/storage/app_preferences.dart';
 import '../features/authorization/domain/get_userType_data.dart';
 import '../features/authorization/domain/repositories/auth_repository.dart';
-import '../features/authorization/domain/repositories/firebase_auth_repository.dart';
+import '../features/authorization/domain/repositories/auth_repository_impl.dart';
 import '../features/authorization/presentation/auth_bloc.dart';
+import '../features/firebase/data/FirebaseServiceImpl.dart';
+import '../features/firebase/domain/BaseFirebaseService.dart';
 import '../features/onboarding/domain/get_onboarding_data.dart';
 import '../features/onboarding/presentation/onboarding_bloc.dart';
 final getX = GetIt.instance;
@@ -23,7 +25,10 @@ Future<void> setupLocator() async {
 
   getX.registerLazySingleton(() => FirebaseAuth.instance);
   getX.registerLazySingleton(() => FirebaseFirestore.instance);
+  getX.registerLazySingleton<BaseFirebaseService>(() => FirebaseServiceImpl());
 
-  getX.registerLazySingleton<AuthRepository>(() => FirebaseAuthRepository(getX<FirebaseAuth>(),getX<FirebaseFirestore>()));
+  getX.registerLazySingleton<AuthRepository>(
+        () => AuthRepositoryImpl(getX<BaseFirebaseService>()),
+  );
 
 }
