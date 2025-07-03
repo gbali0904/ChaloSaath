@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:env_config/config/app_secrets.dart';
 import 'package:http/http.dart' as http;
 
 import 'AddressRepo.dart';
@@ -8,11 +9,10 @@ class AddressRepoImpl extends AddressRepo{
 
   @override
   Future<List<String>> fetchAddressSuggestions(String query) async {
+
+
     final url = Uri.parse(
-      'https://maps.googleapis.com/maps/api/place/autocomplete/json'
-          '?input=${Uri.encodeComponent(query)}'
-          '&key=AIzaSyDYB7bOdYzLWFuDMjGcH7naEGQxeVK_YVc'
-          '&components=country:in',
+      '${AppSecrets.googleMapApiUrl}/json?input=${Uri.encodeComponent(query)}&key=${AppSecrets.googleMapApiKey}&components=country:in',
     );
 
     final response = await http.get(url);

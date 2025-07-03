@@ -45,6 +45,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),
             );
+
+            print("message : ${state.message}");
           }
         },
         child: buildCustomScaffold(),
