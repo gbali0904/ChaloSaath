@@ -41,14 +41,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   var uid = "";
 
+  late UserModel user;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     widget.bloc.add(LoadUserTypeData());
-    uid = getX<AppPreference>().getString(AppKey.uid) ?? Uuid().v4();
-    String email = getX<AppPreference>().getString(AppKey.email);
-    emailController.text = email;
+    final userJson =getX<AppPreference>().getString(AppKey.googleData);
+    final map = jsonDecode(userJson);
+    user= UserModel.fromMap(map);
+
+    emailController.text = user.email;
+    fullNameController.text = user.fullName;
+    uid = user.uid;
+    phoneController.text = user.phone != "null" ?user.phone : "";
   }
 
   @override
@@ -338,6 +345,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               carNumber: selectedUserType == "Pilot"
                                   ? carNumberController.text.trim()
                                   : '',
+                                isRegister:true,
                             );
                             widget.bloc.add(RegisterUser(user));
                           }

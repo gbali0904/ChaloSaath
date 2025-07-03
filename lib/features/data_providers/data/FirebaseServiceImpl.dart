@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../authorization/data/user_model.dart';
 import '../domain/BaseFirebaseService.dart';
 import '../domain/SocialSignInService.dart';
 
@@ -16,9 +17,26 @@ class FirebaseServiceImpl implements BaseFirebaseService {
     return await _auth.signInWithCredential(credential);
   }
 
+  Future<UserModel?> checkUserAndPrint(String email) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: email.trim())
+        .limit(1)
+        .get();
+    if (snapshot.docs.isNotEmpty) {
+      final data = snapshot.docs.first.data();
+      return UserModel.fromMap(data);
+    } else {
+      return null;
+    }
+  }
+
+
+
+
   @override
-  Future<void> saveUserData(String uid, Map<String, dynamic> userData) async {
-    await _firestore.collection('users').doc(uid).set(userData);
+  Future<void> saveUserData(String email, Map<String, dynamic> userData) async {
+    await _firestore.collection('users').doc(email).set(userData);
   }
 
   @override

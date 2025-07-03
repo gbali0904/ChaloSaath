@@ -44,9 +44,8 @@ class _LoginScreenState extends State<LoginScreen> {
             setState(() {
               isLoading = false;
             });
-            print("userData ${state.userCredential.user?.email}");
             await getX<AppPreference>().setBool(AppKey.isLogin, true);
-            String data = jsonEncode( state.userCredential.user);
+            String data = jsonEncode( state.userCredential);
             await getX<AppPreference>().setString(AppKey.userData,data);
           Navigator.pushReplacementNamed(context, "/home");
           } else if (state is AuthFailure) {

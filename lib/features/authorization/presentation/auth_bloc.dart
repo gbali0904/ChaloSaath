@@ -40,9 +40,34 @@ class AuthorizationBloc extends Bloc<AuthEvent, AuthState>
 
     on<SignInWithGoogle>((event, emit) async {
       emit(AuthLoading());
+      var userModel;
       try {
         final UserCredential? userCredential =  await repository.googleLogin();
-        emit(LoginSuccess(userCredential!));
+      if(userCredential != null) {
+        userModel = UserModel(uid: userCredential.user!.uid,
+            fullName: userCredential.user!.displayName.toString(),
+            email:userCredential.user!.email.toString(),
+            phone: userCredential.user!.phoneNumber.toString(),
+            role: '',
+        );
+      }  emit(LoginSuccess(userModel!));
+      } catch (e) {
+        emit(AuthFailure(e.toString()));
+      }
+
+    });
+
+
+
+    on<CheckUser>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        final UserModel? userCredential =  await repository.checkUser(email: event.email);
+        if (userCredential != null) {
+          emit(UserSuccess(userCredential));
+        } else {
+          emit(UserFail());
+        }
       } catch (e) {
         emit(AuthFailure(e.toString()));
       }
@@ -51,13 +76,20 @@ class AuthorizationBloc extends Bloc<AuthEvent, AuthState>
 
     on<LoginIN>((event, emit) async {
       emit(AuthLoading());
-
+      var userModel;
       try {
         var userCredential = await repository.loginUser(
           email: event.email,
           password: event.password,
         );
-        emit(LoginSuccess(userCredential!));
+        if(userCredential != null) {
+          userModel = UserModel(uid: userCredential.user!.uid,
+              fullName: userCredential.user!.displayName.toString(),
+              email:userCredential.user!.email.toString(),
+              phone: userCredential.user!.phoneNumber.toString(),
+              role: '');
+        }
+        emit(LoginSuccess(userModel!));
       } catch (e) {
         emit(AuthFailure(e.toString()));
       }

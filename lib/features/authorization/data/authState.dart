@@ -1,3 +1,4 @@
+import 'package:chalosaath/features/authorization/data/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class AuthState {}
@@ -18,9 +19,14 @@ class RoleChangedData extends AuthState {
 
 class AuthSuccess extends AuthState {}
 class LoginSuccess extends AuthState {
-  final UserCredential userCredential;
+  final UserModel userCredential;
   LoginSuccess(this.userCredential);
 }
+class UserSuccess extends AuthState {
+  final UserModel? userCredential;
+  UserSuccess(this.userCredential);
+}
+class UserFail extends AuthState{}
 class AuthFailure extends AuthState {
   final String message;
   AuthFailure(this.message);

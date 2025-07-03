@@ -5,6 +5,7 @@ import '../../data/user_model.dart';
 abstract class AuthRepository {
 
   Future<UserCredential?> googleLogin() async {}
+  Future<UserModel?> checkUser({required String email}) async {}
 
   Future<void> registerUser({required UserModel userData});
 

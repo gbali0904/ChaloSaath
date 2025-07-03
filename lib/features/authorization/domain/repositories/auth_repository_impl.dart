@@ -10,7 +10,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<void> registerUser({required UserModel userData}) async {
     try {
-      await _firebaseService.saveUserData(userData.uid, userData.toJson());
+      await _firebaseService.saveUserData(userData.email, userData.toJson());
     } on FirebaseAuthException catch (e) {
       throw Exception(e.message ?? 'Registration failed');
     }
@@ -34,4 +34,9 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> logout() => _firebaseService.logout();
+
+  @override
+  Future<UserModel?> checkUser({required String email}) {
+    return _firebaseService.checkUserAndPrint(email);
+  }
 }

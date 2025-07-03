@@ -23,3 +23,8 @@ class LoginIN extends AuthEvent{
   String password;
   LoginIN( this.email,  this.password) ;
 }
+
+class CheckUser extends AuthEvent{
+  String email;
+  CheckUser( this.email) ;
+}

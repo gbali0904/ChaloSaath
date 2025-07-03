@@ -36,18 +36,34 @@ class _AuthScreenState extends State<AuthScreen> {
               isLoading = true;
             });
           } else if (state is LoginSuccess) {
+
+            String data = jsonEncode( state.userCredential);
+            await getX<AppPreference>().setString(AppKey.googleData,data);
+            widget.bloc.add(CheckUser(state.userCredential.email));
+          }
+          else if (state is UserSuccess) {
             setState(() {
               isLoading = false;
             });
-            print("userData ${state.userCredential.user?.email}");
-            String? email =  state.userCredential.user!.email.toString();
-            String? uid =  state.userCredential.user!.uid.toString();
-            await getX<AppPreference>().setString(AppKey.email,email);
-            await getX<AppPreference>().setString(AppKey.uid,uid);
-            final isLogin = getX<AppPreference>().getBool(AppKey.isLogin);
-            Navigator.pushReplacementNamed(context,  isLogin == false ? "/signup" :"/home");
+            print("dtaa ${state.userCredential?.isRegister}");
+            if(state.userCredential != null && state.userCredential?.isRegister == true) {
+              String data = jsonEncode(state.userCredential);
+              await getX<AppPreference>().setString(AppKey.userData, data);
+              await getX<AppPreference>().setBool(AppKey.isLogin, true);
+              Navigator.pushReplacementNamed(context, "/home");
+            }else{
+              Navigator.pushReplacementNamed(context,  "/signup");
 
-          } else if (state is AuthFailure) {
+            }
+          }
+          else if (state is UserFail) {
+            setState(() {
+              isLoading = false;
+            });
+              final isLogin = getX<AppPreference>().getBool(AppKey.isLogin);
+              Navigator.pushReplacementNamed(context,  isLogin == false ? "/signup" :"/home");
+          }
+          else if (state is AuthFailure) {
             setState(() {
               isLoading = false;
             });

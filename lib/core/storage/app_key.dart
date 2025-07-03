@@ -5,6 +5,7 @@ enum AppKey {
   uid,
   userData,
   isFirstLaunch,
+  googleData,
 }
 
 extension AppKeyString on AppKey {
@@ -22,6 +23,8 @@ extension AppKeyString on AppKey {
         return 'uid';
       case AppKey.isFirstLaunch:
         return 'isFirstLaunch';
+      case AppKey.googleData:
+        return 'googleData';
     }
   }
 }
