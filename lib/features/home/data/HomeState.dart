@@ -11,9 +11,12 @@ class HomeLoaded extends HomeState {
 
   HomeLoaded(this.userData);
 }
+class UserDataSuccess extends HomeState {
+  final List<UserModel> userData;
+  UserDataSuccess(this.userData);
+}
 
 class HomeError extends HomeState {
   final String message;
-
   HomeError(this.message);
 }

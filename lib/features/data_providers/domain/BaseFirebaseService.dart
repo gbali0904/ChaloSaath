@@ -11,4 +11,5 @@ abstract class BaseFirebaseService {
   Future<void> logout();
   Future<void> saveLocations(List<String> locations);
   Future<List<String>> searchLocationsFromFirebase(String query);
+  Future<List<UserModel>>  getUserList(String role) ;
 }

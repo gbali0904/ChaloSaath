@@ -114,4 +114,15 @@ class FirebaseServiceImpl implements BaseFirebaseService {
     await _auth.signOut();
     await _googleSignInService.logout();
   }
+
+  @override
+  Future<List<UserModel>>  getUserList(String role) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('role', isNotEqualTo: role)
+        .get();
+
+    return snapshot.docs.map((doc) => UserModel.fromMap(doc.data())).toList();
+
+  }
 }

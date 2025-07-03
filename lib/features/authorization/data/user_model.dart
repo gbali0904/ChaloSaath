@@ -10,6 +10,7 @@ class UserModel {
   final String? office_address;
   final bool? isRegister;
   final bool? isAddress;
+  final bool? isCarVerified;
 
   UserModel({
     required this.uid,
@@ -23,6 +24,7 @@ class UserModel {
     this.password,
     this.isRegister,
     this.isAddress,
+    this.isCarVerified,
   });
   UserModel copyWith({
     String? uid,
@@ -35,6 +37,7 @@ class UserModel {
     String? carNumber,
     bool? isRegister,
     bool? isAddress,
+    bool? isCarVerified,
   }) {
     return UserModel(
       uid: uid ?? this.uid,
@@ -47,6 +50,7 @@ class UserModel {
       office_address: office_address ?? this.office_address,
       isRegister: isRegister ?? this.isRegister,
       isAddress: isAddress ?? this.isAddress,
+      isCarVerified: isCarVerified ?? this.isCarVerified,
     );
   }
   Map<String, dynamic> toJson() {
@@ -61,6 +65,7 @@ class UserModel {
       "carNumber": carNumber,
       "isRegister": isRegister,
       "isAddress": isAddress,
+      "isCarVerified": isCarVerified,
     };
   }
 
@@ -77,6 +82,7 @@ class UserModel {
       password: map['password'],
       isRegister: map['isRegister'],
       isAddress: map['isAddress'],
+      isCarVerified: map['isCarVerified'],
     );
   }
 
@@ -93,6 +99,7 @@ class UserModel {
       'password': password,
       'isRegister': isRegister,
       'isAddress': isAddress,
+      'isCarVerified': isCarVerified,
     };
   }
 }
