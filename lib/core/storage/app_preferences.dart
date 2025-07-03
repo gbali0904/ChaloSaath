@@ -2,6 +2,7 @@
 // lib/core/storage/app_preference.dart
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../services/service_locator.dart';
 import 'app_key.dart';
 
 class AppPreference {
@@ -38,4 +39,15 @@ class AppPreference {
   Future<void> clearAll() async {
     await _prefs.clear();
   }
+
+  Future<void> clearAllExceptOnboardingSeen() async {
+    final seen = getX<AppPreference>().getBool(AppKey.onboardingSeen);
+    await _prefs.clear();
+    await getX<AppPreference>().setBool(
+      AppKey.onboardingSeen,
+      seen,
+    );
+
+  }
+
 }

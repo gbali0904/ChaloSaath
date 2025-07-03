@@ -1,5 +1,6 @@
 import 'package:chalosaath/features/authorization/presentation/auth_bloc.dart';
 import 'package:chalosaath/features/address/presentation/AddressSearchBloc.dart';
+import 'package:chalosaath/features/home/presentation/HomeBloc.dart';
 import 'package:chalosaath/features/onboarding/presentation/onboarding_bloc.dart';
 import 'package:flutter/material.dart';
 import '../../features/authorization/presentation/AuthScreen.dart';
@@ -30,7 +31,7 @@ class RouteGenerator {
         case '/signup':
         return MaterialPageRoute(builder: (_) => SignUpScreen(bloc :getX<AuthorizationBloc>()));
         case '/home':
-        return MaterialPageRoute(builder: (_) => HomeScreen(bloc :getX<AddressSearchBloc>()));
+        return MaterialPageRoute(builder: (_) => HomeScreen(bloc :getX<AddressSearchBloc>(),home_bloc :getX<HomeBloc>()));
         case '/main':
         return MaterialPageRoute(builder: (_) => MainScreen());
         case '/profile':

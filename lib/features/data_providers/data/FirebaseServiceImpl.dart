@@ -17,6 +17,7 @@ class FirebaseServiceImpl implements BaseFirebaseService {
     return await _auth.signInWithCredential(credential);
   }
 
+  @override
   Future<UserModel?> checkUserAndPrint(String email) async {
     final snapshot = await FirebaseFirestore.instance
         .collection('users')
@@ -31,9 +32,6 @@ class FirebaseServiceImpl implements BaseFirebaseService {
     }
   }
 
-
-
-
   @override
   Future<void> saveUserData(String email, Map<String, dynamic> userData) async {
     await _firestore.collection('users').doc(email).set(userData);
@@ -44,6 +42,7 @@ class FirebaseServiceImpl implements BaseFirebaseService {
     return _auth.signInWithEmailAndPassword(email: email, password: password);
   }
 
+  @override
   Future<void> saveLocations(List<String> locations) async {
     final collection = FirebaseFirestore.instance.collection('locations');
     for (final loc in locations) {
@@ -54,15 +53,18 @@ class FirebaseServiceImpl implements BaseFirebaseService {
     }
   }
 
+  @override
   Future<List<String>> searchLocationsFromFirebase(String query) async {
     final snapshot = await FirebaseFirestore.instance
         .collection('locations')
         .orderBy('name')
         .get();
-    var data = searchLocationsLocally(query, snapshot.docs.map((doc) => doc['name'] as String).toList());
+    var data = searchLocationsLocally(
+      query,
+      snapshot.docs.map((doc) => doc['name'] as String).toList(),
+    );
     return data;
   }
-
 
   List<String> searchLocationsLocally(String query, List<String> collection) {
     final lowerQuery = query.toLowerCase();
@@ -72,8 +74,37 @@ class FirebaseServiceImpl implements BaseFirebaseService {
     }).toList();
   }
 
+  Future<UserModel?> updateUserAddresses(UserModel userData) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userData.email)
+          .update({
+            'homeAddress': userData.home_address,
+            'officeAddress': userData.office_address,
+            'isAddress': userData.isAddress,
+          });
+      final docRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userData.email);
+        await docRef.update({
+          'homeAddress': userData.home_address,
+          'officeAddress': userData.office_address,
+          'isAddress': userData.isAddress,
+        });
 
+        final updatedDoc = await docRef.get();
 
+        if (updatedDoc.exists && updatedDoc.data() != null) {
+          return UserModel.fromMap(updatedDoc.data()!);
+        } else {
+          return null;
+        } // success
+    } catch (e) {
+      print('Error updating addresses: $e');
+      return null;
+    }
+  }
 
   @override
   User? getCurrentUser() => _auth.currentUser;

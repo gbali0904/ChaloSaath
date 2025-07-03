@@ -15,6 +15,7 @@ import '../features/data_providers/data/FirebaseServiceImpl.dart';
 import '../features/data_providers/domain/BaseFirebaseService.dart';
 import '../features/data_providers/domain/SocialSignInService.dart';
 import '../features/address/presentation/AddressSearchBloc.dart';
+import '../features/home/presentation/HomeBloc.dart';
 import '../features/onboarding/domain/get_onboarding_data.dart';
 import '../features/onboarding/presentation/onboarding_bloc.dart';
 
@@ -26,6 +27,7 @@ Future<void> setupLocator() async {
   getX.registerFactory(() => OnboardingBloc(getX()));
   getX.registerFactory<AddressRepo>(() => AddressRepoImpl(getX<BaseFirebaseService>()));
   getX.registerFactory(() => AddressSearchBloc(getX<AddressRepo>()));
+  getX.registerFactory(() => HomeBloc(getX<BaseFirebaseService>()));
   getX.registerFactory(
     () => AuthorizationBloc(getX<GetUsertypeData>(), getX<AuthRepository>()),
   );

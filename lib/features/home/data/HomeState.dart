@@ -1,3 +1,5 @@
+import 'package:chalosaath/features/authorization/data/user_model.dart';
+
 abstract class HomeState {}
 
 class HomeInitial extends HomeState {}
@@ -5,9 +7,9 @@ class HomeInitial extends HomeState {}
 class HomeLoading extends HomeState {}
 
 class HomeLoaded extends HomeState {
-  final List<String> suggestions;
+  final UserModel userData;
 
-  HomeLoaded(this.suggestions);
+  HomeLoaded(this.userData);
 }
 
 class HomeError extends HomeState {
