@@ -293,59 +293,63 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(12),
-                            child: Row(
+                            child: Column(
                               children: [
-                                // Circular Image
-                                CircleAvatar(
-                                  radius: 30,
-                                  backgroundImage: AssetImage(
-                                    "assets/profile_user.png",
-                                  ),
-                                  backgroundColor: Colors.grey.shade200,
-                                ),
-                                const SizedBox(width: 12),
-
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        user_data.fullName,
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                Row(
+                                  children: [
+                                    // Circular Image
+                                    CircleAvatar(
+                                      radius: 30,
+                                      backgroundImage: AssetImage(
+                                        "assets/profile_user.png",
                                       ),
-                                      const SizedBox(height: 4),
-                                      Visibility(
-                                        visible: user.role == "Rider",
-                                        child: Row(
-                                          children: [
-                                            Text('Car Number: ${user_data.carNumber}'),
-                                            SizedBox(width: 6),
-                                            Icon(
-                                              user_data.isCarVerified == true
-                                                  ? Icons.check_circle
-                                                  : Icons.cancel,
-                                              color: user_data.isCarVerified == true
-                                                  ? Colors.green
-                                                  : Colors.red,
-                                              size: 18,
+                                      backgroundColor: Colors.grey.shade200,
+                                    ),
+                                    const SizedBox(width: 12),
+
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            user_data.fullName,
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Visibility(
+                                            visible: user.role == "Rider",
+                                            child: Row(
+                                              children: [
+                                                Text('Car Number: ${user_data.carNumber}'),
+                                                SizedBox(width: 6),
+                                                Icon(
+                                                  user_data.isCarVerified == true
+                                                      ? Icons.check_circle
+                                                      : Icons.cancel,
+                                                  color: user_data.isCarVerified == true
+                                                      ? Colors.green
+                                                      : Colors.red,
+                                                  size: 18,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Text('Home: ${user_data.homeAddress}'),
+                                          const SizedBox(height: 10),
+                                          Text('Office: ${user_data.officeAddress}'),
+                                        ],
                                       ),
-                                      const SizedBox(height: 10),
-                                      Text('Home: ${user_data.homeAddress}'),
-                                      const SizedBox(height: 10),
-                                      Text('Office: ${user_data.officeAddress}'),
-                                    ],
-                                  ),
+                                    )
+                                  ],
                                 ),
-
-                                // Icons column
-                                Column(
+                                Divider(),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: [
                                     IconButton(
                                       icon: const Icon(
