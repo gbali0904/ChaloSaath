@@ -119,10 +119,12 @@ class FirebaseServiceImpl implements BaseFirebaseService {
   Future<List<UserModel>>  getUserList(String role) async {
     final snapshot = await FirebaseFirestore.instance
         .collection('users')
-        .where('role', isNotEqualTo: role)
+        .where('isAddress', isEqualTo: true)
         .get();
 
-    return snapshot.docs.map((doc) => UserModel.fromMap(doc.data())).toList();
-
+    return  snapshot.docs
+        .where((doc) => doc['role'] != role)
+        .map((doc) => UserModel.fromMap(doc.data()))
+        .toList();
   }
 }

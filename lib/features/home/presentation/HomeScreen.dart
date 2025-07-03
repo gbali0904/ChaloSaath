@@ -32,9 +32,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final homeController = TextEditingController();
   final workController = TextEditingController();
+  final searchController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
   List<String> _suggestions = [];
+  List<String> _search = [];
 
   bool? isAddress = false;
 
@@ -43,6 +45,8 @@ class _HomeScreenState extends State<HomeScreen> {
   late UserModel user;
 
   List<UserModel> data = [];
+
+  List<UserModel> filteredData = [];
 
   @override
   void initState() {
@@ -94,6 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 setState(() {
                   isLoading = false;
                   data = state.userData;
+                  filteredData = data;
                 });
               } else if (state is HomeError) {
                 setState(() {
@@ -122,6 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Visibility(
                   visible: isAddress!,
                   child: TextField(
+                    controller: searchController,
                     decoration: InputDecoration(
                       hintText: 'Search Ride or Location...',
                       prefixIcon: const Icon(Icons.search),
@@ -132,6 +138,32 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderSide: BorderSide.none,
                       ),
                     ),
+                    onChanged: (value) {
+                      final query = value.toLowerCase();
+                      setState(() {
+                        if (query != "") {
+                          filteredData = data.where((user) {
+                            return user.fullName.toLowerCase().contains(
+                                  query,
+                                ) ||
+                                (user.carNumber?.toLowerCase().contains(
+                                      query,
+                                    ) ??
+                                    false) ||
+                                (user.homeAddress?.toLowerCase().contains(
+                                      query,
+                                    ) ??
+                                    false) ||
+                                (user.officeAddress?.toLowerCase().contains(
+                                      query,
+                                    ) ??
+                                    false);
+                          }).toList();
+                        } else {
+                          filteredData = data;
+                        }
+                      });
+                    },
                   ),
                 ),
                 Visibility(
@@ -240,6 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           false) {
                                         user = user.copyWith(
                                           isAddress: true,
+                                          isRegister: true,
                                           homeAddress: homeController.text,
                                           officeAddress: workController.text,
                                         );
@@ -280,111 +313,129 @@ class _HomeScreenState extends State<HomeScreen> {
                 Visibility(
                   visible: isAddress!,
                   child: Expanded(
-                    child: ListView.builder(
-                      itemCount: data.length,
-                      itemBuilder: (context, index) {
-                        final user_data = data[index];
-                        return Card(
-                          elevation: 3,
-                          color: Colors.white,
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    // Circular Image
-                                    CircleAvatar(
-                                      radius: 30,
-                                      backgroundImage: AssetImage(
-                                        "assets/profile_user.png",
-                                      ),
-                                      backgroundColor: Colors.grey.shade200,
-                                    ),
-                                    const SizedBox(width: 12),
-
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                    child: filteredData.isNotEmpty
+                        ? ListView.builder(
+                            itemCount: filteredData.length,
+                            itemBuilder: (context, index) {
+                              final user_data = filteredData[index];
+                              return Card(
+                                elevation: 3,
+                                color: Colors.white,
+                                margin: const EdgeInsets.symmetric(vertical: 8),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Column(
+                                    children: [
+                                      Row(
                                         children: [
-                                          Text(
-                                            user_data.fullName,
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
+                                          // Circular Image
+                                          CircleAvatar(
+                                            radius: 30,
+                                            backgroundImage: AssetImage(
+                                              "assets/profile_user.png",
                                             ),
+                                            backgroundColor:
+                                                Colors.grey.shade200,
                                           ),
-                                          const SizedBox(height: 4),
-                                          Visibility(
-                                            visible: user.role == "Rider",
-                                            child: Row(
+                                          const SizedBox(width: 12),
+
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
-                                                Text('Car Number: ${user_data.carNumber}'),
-                                                SizedBox(width: 6),
-                                                Icon(
-                                                  user_data.isCarVerified == true
-                                                      ? Icons.check_circle
-                                                      : Icons.cancel,
-                                                  color: user_data.isCarVerified == true
-                                                      ? Colors.green
-                                                      : Colors.red,
-                                                  size: 18,
+                                                Text(
+                                                  user_data.fullName,
+                                                  style: const TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Visibility(
+                                                  visible: user.role == "Rider",
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        'Car Number: ${user_data.carNumber}',
+                                                      ),
+                                                      SizedBox(width: 6),
+                                                      Icon(
+                                                        user_data.isCarVerified ==
+                                                                true
+                                                            ? Icons.check_circle
+                                                            : Icons.cancel,
+                                                        color:
+                                                            user_data
+                                                                    .isCarVerified ==
+                                                                true
+                                                            ? Colors.green
+                                                            : Colors.red,
+                                                        size: 18,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 10),
+                                                Text(
+                                                  'Home: ${user_data.homeAddress}',
+                                                ),
+                                                const SizedBox(height: 10),
+                                                Text(
+                                                  'Office: ${user_data.officeAddress}',
                                                 ),
                                               ],
                                             ),
                                           ),
-                                          const SizedBox(height: 10),
-                                          Text('Home: ${user_data.homeAddress}'),
-                                          const SizedBox(height: 10),
-                                          Text('Office: ${user_data.officeAddress}'),
                                         ],
                                       ),
-                                    )
-                                  ],
-                                ),
-                                Divider(),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(
-                                        Icons.call,
-                                        color: Colors.green,
+                                      Divider(),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.call,
+                                              color: Colors.green,
+                                            ),
+                                            onPressed: () async {
+                                              final phoneNumber = user_data
+                                                  .phone; // e.g. "1234567890"
+                                              final Uri phoneUri = Uri(
+                                                scheme: 'tel',
+                                                path: phoneNumber,
+                                              );
+                                              if (await canLaunchUrl(
+                                                phoneUri,
+                                              )) {
+                                                await launchUrl(phoneUri);
+                                              } else {
+                                                print(
+                                                  'Could not launch dialer',
+                                                );
+                                              }
+                                            },
+                                          ),
+                                          IconButton(
+                                            icon: Icon(
+                                              Icons.chat,
+                                              color: AppColors.primary,
+                                            ),
+                                            onPressed: () {},
+                                          ),
+                                        ],
                                       ),
-                                      onPressed: () async {
-                                        final phoneNumber =
-                                            user_data.phone; // e.g. "1234567890"
-                                        final Uri phoneUri = Uri(
-                                          scheme: 'tel',
-                                          path: phoneNumber,
-                                        );
-                                        if (await canLaunchUrl(phoneUri)) {
-                                          await launchUrl(phoneUri);
-                                        } else {
-                                          print('Could not launch dialer');
-                                        }
-                                      },
-                                    ),
-                                    IconButton(
-                                      icon:  Icon(
-                                        Icons.chat,
-                                        color: AppColors.primary,
-                                      ),
-                                      onPressed: () {},
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                              );
+                            },
+                          )
+                        : Center(child: Text("No Data Found ")),
                   ),
                 ),
               ],

@@ -346,7 +346,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               carNumber: selectedUserType == "Pilot"
                                   ? carNumberController.text.trim()
                                   : '',
-                              isRegister: true,
+                              isRegister: false,
                               isCarVerified: false,
                             );
                             widget.bloc.add(RegisterUser(user));

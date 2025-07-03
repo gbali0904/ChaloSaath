@@ -30,6 +30,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
+      appbar: false,
       body: SafeArea(
         child: BlocBuilder<OnboardingBloc, OnboardingState>(
           bloc: widget.bloc,
