@@ -49,15 +49,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
     // TODO: implement initState
     super.initState();
     widget.bloc.add(LoadUserTypeData());
-    final userJson = widget.args == false ?getX<AppPreference>().getString(AppKey.googleData):getX<AppPreference>().getString(AppKey.userData);
+    final userJson = widget.args == false
+        ? getX<AppPreference>().getString(AppKey.googleData)
+        : getX<AppPreference>().getString(AppKey.userData);
     final map = jsonDecode(userJson);
     user = UserModel.fromMap(map);
     emailController.text = user.email;
     fullNameController.text = user.fullName;
     uid = user.uid;
     phoneController.text = user.phone != "null" ? user.phone : "";
-    selectedUserType = user.role ;
-    if(user.role == "Pilot"){
+    if (widget.args == true) {
+      selectedUserType = user.role;
+    }
+    if (widget.args == true && user.role == "Pilot") {
       carNumberController.text = user.carNumber.toString();
     }
   }
