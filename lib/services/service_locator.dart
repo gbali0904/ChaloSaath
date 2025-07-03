@@ -1,11 +1,12 @@
 import 'package:chalosaath/features/data_providers/data/SocialSignInServiceImpl.dart';
-import 'package:chalosaath/features/home/domain/AddressRepoImpl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/storage/app_preferences.dart';
+import '../features/address/domain/AddressRepo.dart';
+import '../features/address/domain/AddressRepoImpl.dart';
 import '../features/authorization/domain/get_userType_data.dart';
 import '../features/authorization/domain/repositories/auth_repository.dart';
 import '../features/authorization/domain/repositories/auth_repository_impl.dart';
@@ -13,8 +14,7 @@ import '../features/authorization/presentation/auth_bloc.dart';
 import '../features/data_providers/data/FirebaseServiceImpl.dart';
 import '../features/data_providers/domain/BaseFirebaseService.dart';
 import '../features/data_providers/domain/SocialSignInService.dart';
-import '../features/home/domain/AddressRepo.dart';
-import '../features/home/presentation/AddressSearchBloc.dart';
+import '../features/address/presentation/AddressSearchBloc.dart';
 import '../features/onboarding/domain/get_onboarding_data.dart';
 import '../features/onboarding/presentation/onboarding_bloc.dart';
 

@@ -1,10 +1,8 @@
-import 'package:chalosaath/features/home/domain/AddressRepo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
+import '../../home/data/HomeState.dart';
 import '../data/AddressSearchEvent.dart';
 import '../data/AddressSearchState.dart';
+import '../domain/AddressRepo.dart';
 class AddressSearchBloc extends Bloc<AddressSearchEvent, AddressSearchState> {
 
   final AddressRepo repo;

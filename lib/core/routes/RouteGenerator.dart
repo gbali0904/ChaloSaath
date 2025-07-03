@@ -1,5 +1,5 @@
 import 'package:chalosaath/features/authorization/presentation/auth_bloc.dart';
-import 'package:chalosaath/features/home/presentation/AddressSearchBloc.dart';
+import 'package:chalosaath/features/address/presentation/AddressSearchBloc.dart';
 import 'package:chalosaath/features/onboarding/presentation/onboarding_bloc.dart';
 import 'package:flutter/material.dart';
 import '../../features/authorization/presentation/AuthScreen.dart';
