@@ -17,7 +17,10 @@ class RoleChangedData extends AuthState {
   RoleChangedData(this.data);
 }
 
-class AuthSuccess extends AuthState {}
+class AuthSuccess extends AuthState {
+  UserModel? userCredential;
+  AuthSuccess( this.userCredential);
+}
 class LoginSuccess extends AuthState {
   final UserModel userCredential;
   LoginSuccess(this.userCredential);

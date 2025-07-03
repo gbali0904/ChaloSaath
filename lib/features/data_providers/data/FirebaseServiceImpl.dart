@@ -80,16 +80,16 @@ class FirebaseServiceImpl implements BaseFirebaseService {
           .collection('users')
           .doc(userData.email)
           .update({
-            'homeAddress': userData.home_address,
-            'officeAddress': userData.office_address,
+            'homeAddress': userData.homeAddress,
+            'officeAddress': userData.officeAddress,
             'isAddress': userData.isAddress,
           });
       final docRef = FirebaseFirestore.instance
           .collection('users')
           .doc(userData.email);
         await docRef.update({
-          'homeAddress': userData.home_address,
-          'officeAddress': userData.office_address,
+          'homeAddress': userData.homeAddress,
+          'officeAddress': userData.officeAddress,
           'isAddress': userData.isAddress,
         });
 

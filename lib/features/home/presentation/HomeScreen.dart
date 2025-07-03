@@ -240,8 +240,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                           false) {
                                         user = user.copyWith(
                                           isAddress: true,
-                                          home_address: homeController.text,
-                                          office_address: workController.text,
+                                          homeAddress: homeController.text,
+                                          officeAddress: workController.text,
                                         );
 
                                         widget.home_bloc.add(
@@ -336,10 +336,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ],
                                         ),
                                       ),
-                                      const SizedBox(height: 2),
-                                      Text('Home: ${user_data.home_address}'),
-                                      const SizedBox(height: 2),
-                                      Text('Office: ${user_data.office_address}'),
+                                      const SizedBox(height: 10),
+                                      Text('Home: ${user_data.homeAddress}'),
+                                      const SizedBox(height: 10),
+                                      Text('Office: ${user_data.officeAddress}'),
                                     ],
                                   ),
                                 ),

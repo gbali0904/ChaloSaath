@@ -7,7 +7,7 @@ abstract class AuthRepository {
   Future<UserCredential?> googleLogin() async {}
   Future<UserModel?> checkUser({required String email}) async {}
 
-  Future<void> registerUser({required UserModel userData});
+  Future<UserModel>  registerUser({required UserModel userData});
 
   Future<UserCredential?> loginUser({required String email, required String password});
 }

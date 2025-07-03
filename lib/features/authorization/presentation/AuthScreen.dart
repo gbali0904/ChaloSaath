@@ -23,8 +23,8 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-
   bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -36,34 +36,33 @@ class _AuthScreenState extends State<AuthScreen> {
               isLoading = true;
             });
           } else if (state is LoginSuccess) {
-
-            String data = jsonEncode( state.userCredential);
-            await getX<AppPreference>().setString(AppKey.googleData,data);
+            String data = jsonEncode(state.userCredential);
+            await getX<AppPreference>().setString(AppKey.googleData, data);
             widget.bloc.add(CheckUser(state.userCredential.email));
-          }
-          else if (state is UserSuccess) {
+          } else if (state is UserSuccess) {
             setState(() {
               isLoading = false;
             });
             print("dtaa ${state.userCredential?.isRegister}");
-            if(state.userCredential != null && state.userCredential?.isRegister == true) {
+            if (state.userCredential != null &&
+                state.userCredential?.isRegister == true) {
               String data = jsonEncode(state.userCredential);
               await getX<AppPreference>().setString(AppKey.userData, data);
               await getX<AppPreference>().setBool(AppKey.isLogin, true);
               Navigator.pushReplacementNamed(context, "/home");
-            }else{
-              Navigator.pushReplacementNamed(context,  "/signup");
-
+            } else {
+              Navigator.pushReplacementNamed(context, "/signup");
             }
-          }
-          else if (state is UserFail) {
+          } else if (state is UserFail) {
             setState(() {
               isLoading = false;
             });
-              final isLogin = getX<AppPreference>().getBool(AppKey.isLogin);
-              Navigator.pushReplacementNamed(context,  isLogin == false ? "/signup" :"/home");
-          }
-          else if (state is AuthFailure) {
+            final isLogin = getX<AppPreference>().getBool(AppKey.isLogin);
+            Navigator.pushReplacementNamed(
+              context,
+              isLogin == false ? "/signup" : "/home",
+            );
+          } else if (state is AuthFailure) {
             setState(() {
               isLoading = false;
             });

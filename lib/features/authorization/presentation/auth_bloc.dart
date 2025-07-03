@@ -27,10 +27,10 @@ class AuthorizationBloc extends Bloc<AuthEvent, AuthState>
       emit(AuthLoading());
 
       try {
-        await repository.registerUser(
+        final UserModel? userCredential =  await repository.registerUser(
           userData: event.userData,
         );
-        emit(AuthSuccess());
+        emit(AuthSuccess(userCredential));
       } catch (e) {
         emit(AuthFailure(e.toString()));
       }

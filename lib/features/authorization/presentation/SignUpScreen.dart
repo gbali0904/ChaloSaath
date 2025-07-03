@@ -48,14 +48,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
     // TODO: implement initState
     super.initState();
     widget.bloc.add(LoadUserTypeData());
-    final userJson =getX<AppPreference>().getString(AppKey.googleData);
+    final userJson = getX<AppPreference>().getString(AppKey.googleData);
     final map = jsonDecode(userJson);
-    user= UserModel.fromMap(map);
+    user = UserModel.fromMap(map);
 
     emailController.text = user.email;
     fullNameController.text = user.fullName;
     uid = user.uid;
-    phoneController.text = user.phone != "null" ?user.phone : "";
+    phoneController.text = user.phone != "null" ? user.phone : "";
   }
 
   @override
@@ -82,6 +82,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             setState(() {
               isLoading = false;
             });
+            await getX<AppPreference>().setString(AppKey.userData,  jsonEncode(state.userCredential));
             await getX<AppPreference>().setBool(AppKey.isLogin, true);
             Navigator.pushReplacementNamed(context, "/home");
           } else if (state is AuthFailure) {
@@ -345,7 +346,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               carNumber: selectedUserType == "Pilot"
                                   ? carNumberController.text.trim()
                                   : '',
-                                isRegister:true,
+                              isRegister: true,
+                              isCarVerified: false,
                             );
                             widget.bloc.add(RegisterUser(user));
                           }
