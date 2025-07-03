@@ -24,7 +24,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final _formKey = GlobalKey<FormState>();
   List<String> _suggestions = [];
 
-
   @override
   void initState() {
     super.initState();
@@ -42,10 +41,6 @@ class _HomeScreenState extends State<HomeScreen> {
               _suggestions = state.suggestions;
             });
           } else if (state is AddressError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-
             print("message : ${state.message}");
           }
         },
@@ -108,9 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       onSelected: (suggestion) {
                         homeController.text = suggestion;
-                      //  widget.bloc.add(FetchAddressSuggestions( homeController.text));
                       },
-
                       builder: (context, controller, focusNode) {
                         return TextField(
                           controller: controller,
@@ -125,24 +118,34 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
                     SizedBox(height: 16),
-                    TextFormField(
+                    TypeAheadField<String>(
                       controller: workController,
-                      decoration: InputDecoration(labelText: "Work Address",
-                        labelStyle: TextStyle(color: AppColors.primary),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: AppColors.underline,
-                          ), // default underline
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: AppColors.primary,
-                          ), // underline on focus
-                        ),),
-                      validator: (val) => val == null || val.isEmpty
-                          ? "Enter work address"
-                          : null,
+                      suggestionsCallback: (pattern) {
+                        widget.bloc.add(FetchAddressSuggestions(pattern));
+                        return _suggestions;
+                      },
+                      itemBuilder: (context, suggestion) {
+                        return ListTile(
+                          title: Text(suggestion),
+                        );
+                      },
+                      onSelected: (suggestion) {
+                        workController.text = suggestion;
+                      },
+
+                      builder: (context, controller, focusNode) {
+                        return TextField(
+                          controller: controller,
+                          focusNode: focusNode,
+                          decoration: InputDecoration(
+                            hintText:  "Work Address",
+                            prefixIcon: Icon(Icons.location_on),
+                          ),
+                        );
+                      },
                     ),
+
+
                     SizedBox(height: 24),
                     SizedBox(
                       width: double.infinity,

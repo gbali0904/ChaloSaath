@@ -44,6 +44,37 @@ class FirebaseServiceImpl implements BaseFirebaseService {
     return _auth.signInWithEmailAndPassword(email: email, password: password);
   }
 
+  Future<void> saveLocations(List<String> locations) async {
+    final collection = FirebaseFirestore.instance.collection('locations');
+    for (final loc in locations) {
+      await collection.add({
+        'name': loc,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    }
+  }
+
+  Future<List<String>> searchLocationsFromFirebase(String query) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('locations')
+        .orderBy('name')
+        .get();
+    var data = searchLocationsLocally(query, snapshot.docs.map((doc) => doc['name'] as String).toList());
+    return data;
+  }
+
+
+  List<String> searchLocationsLocally(String query, List<String> collection) {
+    final lowerQuery = query.toLowerCase();
+
+    return collection.where((location) {
+      return location.toLowerCase().contains(lowerQuery);
+    }).toList();
+  }
+
+
+
+
   @override
   User? getCurrentUser() => _auth.currentUser;
 

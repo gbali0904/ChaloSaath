@@ -24,7 +24,7 @@ Future<void> setupLocator() async {
   getX.registerLazySingleton(() => GetOnboardingData());
   getX.registerLazySingleton(() => GetUsertypeData());
   getX.registerFactory(() => OnboardingBloc(getX()));
-  getX.registerFactory<AddressRepo>(() => AddressRepoImpl());
+  getX.registerFactory<AddressRepo>(() => AddressRepoImpl(getX<BaseFirebaseService>()));
   getX.registerFactory(() => AddressSearchBloc(getX<AddressRepo>()));
   getX.registerFactory(
     () => AuthorizationBloc(getX<GetUsertypeData>(), getX<AuthRepository>()),
