@@ -12,7 +12,20 @@
           "package_name": "com.app.chalosaath"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "852315849296-t0jmauib3smrqro5tdqnrnbrkdd3abpn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.chalosaath",
+            "certificate_hash": "0df231c5bf3e361dd3693fc7cf9060d2cde49470"
+          }
+        },
+        {
+          "client_id": "852315849296-mm8k7snnvdcqus4r5b4vg9ibjecdcrnp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCEdARfF1n89cpHgG9-9qdjcphnkbQdxfQ"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "852315849296-mm8k7snnvdcqus4r5b4vg9ibjecdcrnp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "852315849296-290i7ir4qcruun9qj219a0cno6d5dd2c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.chalosaath"
+              }
+            }
+          ]
         }
       }
     }

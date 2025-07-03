@@ -6,6 +6,7 @@ class UserModel {
   final String role;
   final String? carNumber;
   final String? password;
+  final bool? isRegister;
 
   UserModel({
     required this.uid,
@@ -15,6 +16,7 @@ class UserModel {
     required this.role,
     this.carNumber,
     this.password,
+    this.isRegister,
   });
   UserModel copyWith({
     String? uid,
@@ -23,6 +25,7 @@ class UserModel {
     String? phone,
     String? role,
     String? carNumber,
+    bool? isRegister,
   }) {
     return UserModel(
       uid: uid ?? this.uid,
@@ -31,6 +34,7 @@ class UserModel {
       phone: phone ?? this.phone,
       role: role ?? this.role,
       carNumber: carNumber ?? this.carNumber,
+      isRegister: isRegister ?? this.isRegister,
     );
   }
   Map<String, dynamic> toJson() {
@@ -41,6 +45,7 @@ class UserModel {
       "phone": phone,
       "role": role,
       "carNumber": carNumber,
+      "isRegister": isRegister,
     };
   }
 
@@ -53,6 +58,7 @@ class UserModel {
       role: map['role'] ?? '',
       carNumber: map['carNumber'],
       password: map['password'],
+      isRegister: map['isRegister'],
     );
   }
 
@@ -65,6 +71,7 @@ class UserModel {
       'role': role,
       'carNumber': carNumber ?? '',
       'password': password,
+      'isRegister': isRegister,
     };
   }
 }

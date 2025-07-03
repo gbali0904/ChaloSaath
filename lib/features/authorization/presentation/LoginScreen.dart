@@ -8,8 +8,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/storage/app_key.dart';
 import '../../../core/storage/app_preferences.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../services/service_locator.dart';
-import '../../../theme/app_colors.dart';
 import '../../loader/CustomLoader.dart';
 import '../data/authEvent.dart';
 import '../data/authState.dart';
@@ -44,9 +44,8 @@ class _LoginScreenState extends State<LoginScreen> {
             setState(() {
               isLoading = false;
             });
-            print("userData ${state.userCredential.user?.email}");
             await getX<AppPreference>().setBool(AppKey.isLogin, true);
-            String data = jsonEncode( state.userCredential.user);
+            String data = jsonEncode( state.userCredential);
             await getX<AppPreference>().setString(AppKey.userData,data);
           Navigator.pushReplacementNamed(context, "/home");
           } else if (state is AuthFailure) {

@@ -1,12 +1,18 @@
+import 'dart:convert';
+
 import 'package:chalosaath/features/authorization/data/authEvent.dart';
 import 'package:chalosaath/features/authorization/data/authState.dart';
 import 'package:chalosaath/features/helper/CustomScaffold.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
-import '../../../theme/app_colors.dart';
+import '../../../core/storage/app_key.dart';
+import '../../../core/storage/app_preferences.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../services/service_locator.dart';
 import '../../loader/CustomLoader.dart';
 import '../data/user_model.dart';
 import 'auth_bloc.dart';
@@ -33,11 +39,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final carNumberController = TextEditingController();
   bool isLoading = false;
 
+  var uid = "";
+
+  late UserModel user;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     widget.bloc.add(LoadUserTypeData());
+    final userJson =getX<AppPreference>().getString(AppKey.googleData);
+    final map = jsonDecode(userJson);
+    user= UserModel.fromMap(map);
+
+    emailController.text = user.email;
+    fullNameController.text = user.fullName;
+    uid = user.uid;
+    phoneController.text = user.phone != "null" ?user.phone : "";
   }
 
   @override
@@ -45,33 +63,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return BlocProvider(
       create: (_) => widget.bloc,
       child: BlocListener<AuthorizationBloc, AuthState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is UserTypeLoaded) {
             setState(() {
-              isLoading= false;
+              isLoading = false;
               userTypedata = state.data;
             });
           } else if (state is RoleChangedData) {
             setState(() {
-              isLoading= false;
+              isLoading = false;
               selectedUserType = state.data;
             });
           } else if (state is AuthLoading) {
             setState(() {
-              isLoading= true;
+              isLoading = true;
             });
           } else if (state is AuthSuccess) {
             setState(() {
-              isLoading= false;
+              isLoading = false;
             });
-
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text("Registration successful")));
-            Navigator.pop(context);
+            await getX<AppPreference>().setBool(AppKey.isLogin, true);
+            Navigator.pushReplacementNamed(context, "/home");
           } else if (state is AuthFailure) {
             setState(() {
-              isLoading= false;
+              isLoading = false;
             });
             ScaffoldMessenger.of(
               context,
@@ -86,7 +101,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   buildUI() {
     return CustomScaffold(
-      backpress: true,
       body: Stack(
         children: [
           Container(
@@ -212,6 +226,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     SizedBox(height: 10),
                     TextFormField(
+                      enabled: false,
                       controller: emailController,
                       decoration: InputDecoration(
                         hintText: "Email",
@@ -315,82 +330,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 10),
-                    TextFormField(
-                      controller: passwordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        hintText: "Password",
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Image.asset(
-                            'assets/password.png',
-                            height: 10,
-                            width: 10,
-                            color:
-                                Colors.black, // optional: apply color overlay
-                          ),
-                        ),
-                        iconColor: Colors.black,
-                        hintStyle: TextStyle(color: Colors.black),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: AppColors.underline,
-                          ), // default underline
-                        ),
-                        contentPadding: EdgeInsets.symmetric(vertical: 14),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: AppColors.primary,
-                          ), // underline on focus
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) return "Enter valid Password";
-                        if (value.length != 6)
-                          return "Password should be at least 6 characters";
-
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 10),
-                    TextFormField(
-                      controller: confirmPasswordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        hintText: "Confirm Password",
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Image.asset(
-                            'assets/password.png',
-                            height: 10,
-                            width: 10,
-                            color:
-                                Colors.black, // optional: apply color overlay
-                          ),
-                        ),
-                        iconColor: Colors.black,
-                        hintStyle: TextStyle(color: Colors.black),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: AppColors.underline,
-                          ), // default underline
-                        ),
-                        contentPadding: EdgeInsets.symmetric(vertical: 14),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: AppColors.primary,
-                          ), // underline on focus
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value != passwordController.text) {
-                          return "Passwords do not match";
-                        }
-
-                        return null;
-                      },
-                    ),
                     SizedBox(height: 30),
                     SizedBox(
                       width: double.infinity,
@@ -398,7 +337,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             final user = UserModel(
-                              uid: Uuid().v4(),
+                              uid: uid,
                               fullName: fullNameController.text.trim(),
                               email: emailController.text.trim(),
                               phone: phoneController.text.trim(),
@@ -406,7 +345,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               carNumber: selectedUserType == "Pilot"
                                   ? carNumberController.text.trim()
                                   : '',
-                              password: passwordController.text,
+                                isRegister:true,
                             );
                             widget.bloc.add(RegisterUser(user));
                           }
@@ -419,38 +358,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           padding: EdgeInsets.symmetric(vertical: 14),
                         ),
                         child: Text(
-                          "Sign UP",
+                          "Save",
                           style: GoogleFonts.inter(
                             color: Colors.black,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Center(
-                      child: RichText(
-                        text: TextSpan(
-                          text: "Already have an account ? ",
-                          style: GoogleFonts.inter(color: Colors.black),
-                          children: [
-                            TextSpan(
-                              text: " Login Up",
-                              style: GoogleFonts.inter(
-                                color: AppColors.primary,
-                                decoration: TextDecoration.underline,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  Navigator.pushReplacementNamed(
-                                    context,
-                                    "/login",
-                                  );
-                                },
-                            ),
-                          ],
                         ),
                       ),
                     ),

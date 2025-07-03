@@ -1,7 +1,11 @@
 enum AppKey {
   onboardingSeen,
   isLogin,
+  email,
+  uid,
   userData,
+  isFirstLaunch,
+  googleData,
 }
 
 extension AppKeyString on AppKey {
@@ -13,6 +17,14 @@ extension AppKeyString on AppKey {
         return 'isLogin';
       case AppKey.userData:
         return 'userData';
+      case AppKey.email:
+        return 'email';
+      case AppKey.uid:
+        return 'uid';
+      case AppKey.isFirstLaunch:
+        return 'isFirstLaunch';
+      case AppKey.googleData:
+        return 'googleData';
     }
   }
 }

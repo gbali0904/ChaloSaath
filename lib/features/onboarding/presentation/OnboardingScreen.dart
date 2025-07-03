@@ -99,7 +99,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               AppKey.onboardingSeen,
                               true,
                             );
-                            Navigator.pushReplacementNamed(context, "/main");
+                            Navigator.pushReplacementNamed(context, "/auth");
                           } else {
                             _controller.nextPage(
                               duration: const Duration(milliseconds: 400),
