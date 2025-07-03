@@ -3,6 +3,7 @@ import 'package:chalosaath/features/address/presentation/AddressSearchBloc.dart'
 import 'package:chalosaath/features/home/presentation/HomeBloc.dart';
 import 'package:chalosaath/features/onboarding/presentation/onboarding_bloc.dart';
 import 'package:flutter/material.dart';
+import '../../features/address/presentation/AddressForm.dart';
 import '../../features/authorization/presentation/AuthScreen.dart';
 import '../../features/authorization/presentation/LoginScreen.dart';
 import '../../features/authorization/presentation/SignUpScreen.dart';
@@ -27,14 +28,34 @@ class RouteGenerator {
           builder: (_) => AuthScreen(bloc: getX<AuthorizationBloc>()),
         );
       case '/login':
-        return MaterialPageRoute(builder: (_) => LoginScreen(bloc :getX<AuthorizationBloc>()));
-        case '/signup':
-        return MaterialPageRoute(builder: (_) => SignUpScreen(bloc :getX<AuthorizationBloc>()));
-        case '/home':
-        return MaterialPageRoute(builder: (_) => HomeScreen(bloc :getX<AddressSearchBloc>(),home_bloc :getX<HomeBloc>()));
-        case '/main':
+        return MaterialPageRoute(
+          builder: (_) => LoginScreen(bloc: getX<AuthorizationBloc>()),
+        );
+      case '/signup':
+        final args = settings.arguments as bool;
+        return MaterialPageRoute(
+          builder: (_) =>
+              SignUpScreen(bloc: getX<AuthorizationBloc>(), args: args),
+        );
+      case '/home':
+        return MaterialPageRoute(
+          builder: (_) => HomeScreen(
+            bloc: getX<AddressSearchBloc>(),
+            home_bloc: getX<HomeBloc>(),
+          ),
+        );
+      case '/address':
+        final args = settings.arguments as bool;
+        return MaterialPageRoute(
+          builder: (_) => AddressScreen(
+            bloc: getX<AddressSearchBloc>(),
+            home_bloc: getX<HomeBloc>(),
+            arg: args,
+          ),
+        );
+      case '/main':
         return MaterialPageRoute(builder: (_) => MainScreen());
-        case '/profile':
+      case '/profile':
         return MaterialPageRoute(builder: (_) => ProfileScreen());
       default:
         return MaterialPageRoute(

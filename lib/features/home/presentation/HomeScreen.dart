@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chalosaath/features/address/presentation/AddressForm.dart';
 import 'package:chalosaath/features/home/data/HomeState.dart';
 import 'package:chalosaath/features/home/presentation/HomeBloc.dart';
 import 'package:flutter/material.dart';
@@ -30,13 +31,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final homeController = TextEditingController();
-  final workController = TextEditingController();
   final searchController = TextEditingController();
-
-  final _formKey = GlobalKey<FormState>();
-  List<String> _suggestions = [];
-  List<String> _search = [];
 
   bool? isAddress = false;
 
@@ -67,17 +62,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
       child: MultiBlocListener(
         listeners: [
-          BlocListener<AddressSearchBloc, AddressSearchState>(
-            listener: (context, state) async {
-              if (state is AddressLoaded) {
-                setState(() {
-                  _suggestions = state.suggestions;
-                });
-              } else if (state is AddressError) {
-                print("message : ${state.message}");
-              }
-            },
-          ),
           BlocListener<HomeBloc, HomeState>(
             listener: (context, state) async {
               if (state is HomeLoading) {
@@ -122,7 +106,9 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Column(
+            child:!isAddress! ?
+            AddressScreen(bloc: widget.bloc ,home_bloc:widget.home_bloc,arg:false
+            ): Column(
               children: [
                 Visibility(
                   visible: isAddress!,
@@ -166,149 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                 ),
-                Visibility(
-                  visible: !isAddress!,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 24),
-                      Center(
-                        child: Text(
-                          'Welcome to Chalo Saath!',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      Container(
-                        height: 280,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage("assets/login_bac.png"),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Form(
-                            key: _formKey,
-                            child: Column(
-                              children: [
-                                TypeAheadField<String>(
-                                  controller: homeController,
-                                  suggestionsCallback: (pattern) {
-                                    widget.bloc.add(
-                                      FetchAddressSuggestions(pattern),
-                                    );
-                                    return _suggestions;
-                                  },
-                                  itemBuilder: (context, suggestion) {
-                                    return ListTile(title: Text(suggestion));
-                                  },
-                                  onSelected: (suggestion) {
-                                    homeController.text = suggestion;
-                                  },
-                                  builder: (context, controller, focusNode) {
-                                    return TextFormField(
-                                      controller: controller,
-                                      focusNode: focusNode,
-                                      decoration: InputDecoration(
-                                        hintText: "Enter home address",
-                                        prefixIcon: Icon(Icons.location_on),
-                                      ),
-                                      validator: (value) {
-                                        if (value == null ||
-                                            value.trim().isEmpty) {
-                                          return 'Please enter home address';
-                                        }
-                                        return null;
-                                      },
-                                    );
-                                  },
-                                ),
 
-                                SizedBox(height: 16),
-                                TypeAheadField<String>(
-                                  controller: workController,
-                                  suggestionsCallback: (pattern) {
-                                    widget.bloc.add(
-                                      FetchAddressSuggestions(pattern),
-                                    );
-                                    return _suggestions;
-                                  },
-                                  itemBuilder: (context, suggestion) {
-                                    return ListTile(title: Text(suggestion));
-                                  },
-                                  onSelected: (suggestion) {
-                                    workController.text = suggestion;
-                                  },
-
-                                  builder: (context, controller, focusNode) {
-                                    return TextFormField(
-                                      controller: controller,
-                                      focusNode: focusNode,
-                                      decoration: InputDecoration(
-                                        hintText: "Work Address",
-                                        prefixIcon: Icon(Icons.location_on),
-                                      ),
-                                      validator: (value) {
-                                        if (value == null ||
-                                            value.trim().isEmpty) {
-                                          return 'Please enter work address';
-                                        }
-                                        return null;
-                                      },
-                                    );
-                                  },
-                                ),
-
-                                SizedBox(height: 24),
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      if (_formKey.currentState?.validate() ??
-                                          false) {
-                                        user = user.copyWith(
-                                          isAddress: true,
-                                          isRegister: true,
-                                          homeAddress: homeController.text,
-                                          officeAddress: workController.text,
-                                        );
-
-                                        widget.home_bloc.add(
-                                          SaveUserAddress(user),
-                                        );
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.primary,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 14,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      "Save and Continue",
-                                      style: GoogleFonts.inter(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 SizedBox(height: 20),
                 Visibility(
                   visible: isAddress!,

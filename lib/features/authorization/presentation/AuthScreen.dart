@@ -51,7 +51,7 @@ class _AuthScreenState extends State<AuthScreen> {
               await getX<AppPreference>().setBool(AppKey.isLogin, true);
               Navigator.pushReplacementNamed(context, "/home");
             } else {
-              Navigator.pushReplacementNamed(context, "/signup");
+              Navigator.pushReplacementNamed(context, "/signup",arguments: true);
             }
           } else if (state is UserFail) {
             setState(() {
