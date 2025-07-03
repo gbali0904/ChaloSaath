@@ -9,13 +9,16 @@ class CustomLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox(
-        width: 40,
-        height: 40,
-        child: CircularProgressIndicator(
-          strokeWidth: 4,
-          valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+    return Container(
+      color: Colors.grey.withOpacity(0.5),
+      child: Center(
+        child: SizedBox(
+          width: 60,
+          height: 60,
+          child: CircularProgressIndicator(
+            strokeWidth: 10,
+            valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+          ),
         ),
       ),
     );

@@ -6,6 +6,9 @@ abstract class BaseFirebaseService {
   Future<UserCredential> loginWithEmail(String email, String password);
   Future<UserCredential> loginWithGoogle();
   Future<UserModel?> checkUserAndPrint(String uid);
+  Future<UserModel?> updateUserAddresses(UserModel userData);
   User? getCurrentUser();
   Future<void> logout();
+  Future<void> saveLocations(List<String> locations);
+  Future<List<String>> searchLocationsFromFirebase(String query);
 }
