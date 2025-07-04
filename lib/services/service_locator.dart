@@ -1,3 +1,4 @@
+import 'package:chalosaath/features/chat/domain/ChatRepositoryImpl.dart';
 import 'package:chalosaath/features/data_providers/data/SocialSignInServiceImpl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +12,8 @@ import '../features/authorization/domain/get_userType_data.dart';
 import '../features/authorization/domain/repositories/auth_repository.dart';
 import '../features/authorization/domain/repositories/auth_repository_impl.dart';
 import '../features/authorization/presentation/auth_bloc.dart';
+import '../features/chat/domain/ChatRepository.dart';
+import '../features/chat/presentation/ChatBloc.dart';
 import '../features/data_providers/data/FirebaseServiceImpl.dart';
 import '../features/data_providers/domain/BaseFirebaseService.dart';
 import '../features/data_providers/domain/SocialSignInService.dart';
@@ -28,6 +31,7 @@ Future<void> setupLocator() async {
   getX.registerFactory<AddressRepo>(() => AddressRepoImpl(getX<BaseFirebaseService>()));
   getX.registerFactory(() => AddressSearchBloc(getX<AddressRepo>()));
   getX.registerFactory(() => HomeBloc(getX<BaseFirebaseService>()));
+  getX.registerFactory(() => ChatBloc(getX<ChatRepositoryImpl>()));
   getX.registerFactory(
     () => AuthorizationBloc(getX<GetUsertypeData>(), getX<AuthRepository>()),
   );
@@ -38,6 +42,7 @@ Future<void> setupLocator() async {
   getX.registerLazySingleton(() => FirebaseAuth.instance);
   getX.registerLazySingleton(() => FirebaseFirestore.instance);
 
+  getX.registerFactory<ChatRepository>(() => ChatRepositoryImpl());
   getX.registerFactory<SocialSignInService>(() => SocialSignInServiceImpl());
   getX.registerLazySingleton<BaseFirebaseService>(
     () => FirebaseServiceImpl(getX<SocialSignInService>()),

@@ -1,12 +1,15 @@
 import 'package:chalosaath/features/authorization/presentation/auth_bloc.dart';
 import 'package:chalosaath/features/address/presentation/AddressSearchBloc.dart';
+import 'package:chalosaath/features/chat/presentation/ChatBloc.dart';
 import 'package:chalosaath/features/home/presentation/HomeBloc.dart';
 import 'package:chalosaath/features/onboarding/presentation/onboarding_bloc.dart';
 import 'package:flutter/material.dart';
 import '../../features/address/presentation/AddressForm.dart';
+import '../../features/authorization/data/user_model.dart';
 import '../../features/authorization/presentation/AuthScreen.dart';
 import '../../features/authorization/presentation/LoginScreen.dart';
 import '../../features/authorization/presentation/SignUpScreen.dart';
+import '../../features/chat/presentation/ChatScreen.dart';
 import '../../features/home/presentation/HomeScreen.dart';
 import '../../features/main/MainScreen.dart';
 import '../../features/onboarding/presentation/OnboardingScreen.dart';
@@ -53,6 +56,9 @@ class RouteGenerator {
             arg: args,
           ),
         );
+      case '/chat':
+        final args = settings.arguments as UserModel;
+        return MaterialPageRoute(builder: (_) => ChatScreen(args:args,chatBloc: getX<ChatBloc>(),));
       case '/main':
         return MaterialPageRoute(builder: (_) => MainScreen());
       case '/profile':

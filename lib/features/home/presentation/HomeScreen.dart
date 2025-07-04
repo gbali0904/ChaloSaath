@@ -269,7 +269,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                               Icons.chat,
                                               color: AppColors.primary,
                                             ),
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              Navigator.pushNamed(context, "/chat",arguments: user_data);
+
+                                            },
                                           ),
                                         ],
                                       ),
