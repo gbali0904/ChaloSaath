@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:chalosaath/features/helper/CustomScaffold.dart';
+import 'package:chalosaath/features/helper/CustomScaffoldScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -29,7 +29,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
+    return CustomScaffoldScreen(
       profile: true,
       backpress: true,
       body: Container(

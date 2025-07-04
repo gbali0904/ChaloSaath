@@ -7,7 +7,7 @@ import '../../../core/storage/app_key.dart';
 import '../../../core/storage/app_preferences.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../services/service_locator.dart';
-import '../../helper/CustomScaffold.dart';
+import '../../helper/CustomScaffoldScreen.dart';
 import '../../loader/CustomLoader.dart';
 import '../data/authEvent.dart';
 import '../data/authState.dart';
@@ -43,7 +43,6 @@ class _AuthScreenState extends State<AuthScreen> {
             setState(() {
               isLoading = false;
             });
-            print("dtaa ${state.userCredential?.isRegister}");
             if (state.userCredential != null &&
                 state.userCredential?.isRegister == true) {
               String data = jsonEncode(state.userCredential);
@@ -51,7 +50,7 @@ class _AuthScreenState extends State<AuthScreen> {
               await getX<AppPreference>().setBool(AppKey.isLogin, true);
               Navigator.pushReplacementNamed(context, "/home");
             } else {
-              Navigator.pushReplacementNamed(context, "/signup",arguments: true);
+              Navigator.pushReplacementNamed(context, "/signup",arguments: false);
             }
           } else if (state is UserFail) {
             setState(() {
@@ -69,7 +68,6 @@ class _AuthScreenState extends State<AuthScreen> {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(state.message)));
-            print("${state.message}");
           }
         },
         child: buildUI(),
@@ -78,7 +76,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   buildUI() {
-    return CustomScaffold(
+    return CustomScaffoldScreen(
       body: Stack(
         children: [
           Container(

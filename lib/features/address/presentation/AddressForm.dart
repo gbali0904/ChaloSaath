@@ -12,7 +12,7 @@ import '../../../core/storage/app_preferences.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../services/service_locator.dart';
 import '../../authorization/data/user_model.dart';
-import '../../helper/CustomScaffold.dart';
+import '../../helper/CustomScaffoldScreen.dart';
 import '../../home/data/HomeEvent.dart';
 import '../../home/data/HomeState.dart';
 import '../../home/presentation/HomeBloc.dart';
@@ -114,8 +114,8 @@ class _AddressScreenState extends State<AddressScreen> {
     );
   }
 
-  CustomScaffold buildCustomScaffold() {
-    return CustomScaffold(
+  CustomScaffoldScreen buildCustomScaffold() {
+    return CustomScaffoldScreen(
       appbar: widget.arg ,
       backpress: widget.arg ,
       profile: true,
@@ -222,7 +222,6 @@ class _AddressScreenState extends State<AddressScreen> {
                             if (_formKey.currentState?.validate() ?? false) {
                               user = user.copyWith(
                                 isAddress: true,
-                                isRegister: true,
                                 homeAddress: homeController.text,
                                 officeAddress: workController.text,
                               );

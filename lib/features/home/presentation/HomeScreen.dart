@@ -16,7 +16,7 @@ import '../../address/data/AddressSearchEvent.dart';
 import '../../address/data/AddressSearchState.dart';
 import '../../address/presentation/AddressSearchBloc.dart';
 import '../../authorization/data/user_model.dart';
-import '../../helper/CustomScaffold.dart';
+import '../../helper/CustomScaffoldScreen.dart';
 import '../../loader/CustomLoader.dart';
 import '../data/HomeEvent.dart';
 
@@ -100,8 +100,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  CustomScaffold buildCustomScaffold() {
-    return CustomScaffold(
+  CustomScaffoldScreen buildCustomScaffold() {
+    return CustomScaffoldScreen(
       body: Stack(
         children: [
           Padding(

@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:chalosaath/features/helper/CustomScaffold.dart';
+import 'package:chalosaath/features/helper/CustomScaffoldScreen.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/storage/app_key.dart';
@@ -26,13 +26,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      appbar: false,
-        body: Container(
+    return Scaffold(
+        body: SizedBox(
         height: double.maxFinite,
-        color: Colors.orange, // Background color
         width: double.infinity,
-        child: Image.asset("assets/splash.png"),
+        child: Image.asset("assets/splash.png",fit: BoxFit.cover),
       ),
     );
   }

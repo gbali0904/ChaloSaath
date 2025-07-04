@@ -1,4 +1,4 @@
-import 'package:chalosaath/features/helper/CustomScaffold.dart';
+import 'package:chalosaath/features/helper/CustomScaffoldScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/storage/app_key.dart';
@@ -29,7 +29,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
+    return CustomScaffoldScreen(
       appbar: false,
       body: SafeArea(
         child: BlocBuilder<OnboardingBloc, OnboardingState>(

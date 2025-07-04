@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:chalosaath/features/authorization/data/user_model.dart';
 import 'package:chalosaath/features/chat/data/Message.dart';
-import 'package:chalosaath/features/helper/CustomScaffold.dart';
+import 'package:chalosaath/features/helper/CustomScaffoldScreen.dart';
 import 'package:chalosaath/features/loader/CustomLoader.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -30,9 +30,7 @@ class _ChatScreenState extends State<ChatScreen> {
   UserModel? loggedInUser;
   String chatId = "";
   final TextEditingController _controller = TextEditingController();
-
   bool isLoading = false;
-
   List<Message> messages = [];
 
   @override
@@ -81,6 +79,8 @@ class _ChatScreenState extends State<ChatScreen> {
     if (text.isEmpty) return;
     widget.chatBloc.add(SendMessageEvent(chatId, loggedInUser!.email, text));
     _controller.clear();
+
+
   }
 
   @override
@@ -90,19 +90,19 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   buildUI() {
-    return CustomScaffold(
+    return CustomScaffoldScreen(
       backpress: true,
       profile: true,
-
       body: Stack(
         children: [
           Column(
             children: [
               Expanded(
                 child: ListView.builder(
+                  reverse: true,
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
-                    final message = messages[index];
+                    final message = messages[messages.length - 1 - index];
                     final isMe = message.senderId == loggedInUser?.email;
                     return Align(
                       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
@@ -139,6 +139,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ],
                 ),
               ),
+              SizedBox(height: 40,),
             ],
           ),
 

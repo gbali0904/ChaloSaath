@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:chalosaath/features/authorization/data/authEvent.dart';
 import 'package:chalosaath/features/authorization/data/authState.dart';
-import 'package:chalosaath/features/helper/CustomScaffold.dart';
+import 'package:chalosaath/features/helper/CustomScaffoldScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -112,7 +112,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   buildUI() {
-    return CustomScaffold(
+    return CustomScaffoldScreen(
       backpress: widget.args,
       profile: true,
       body: Stack(
@@ -359,7 +359,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               carNumber: selectedUserType == "Pilot"
                                   ? carNumberController.text.trim()
                                   : '',
-                              isRegister: false,
+                              isRegister: true,
                               isCarVerified: false,
                             );
                             widget.bloc.add(RegisterUser(user));
