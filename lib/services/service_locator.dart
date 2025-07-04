@@ -42,7 +42,7 @@ Future<void> setupLocator() async {
   getX.registerLazySingleton(() => FirebaseAuth.instance);
   getX.registerLazySingleton(() => FirebaseFirestore.instance);
 
-  getX.registerFactory<ChatRepository>(() => ChatRepositoryImpl());
+  getX.registerFactory(() => ChatRepositoryImpl());
   getX.registerFactory<SocialSignInService>(() => SocialSignInServiceImpl());
   getX.registerLazySingleton<BaseFirebaseService>(
     () => FirebaseServiceImpl(getX<SocialSignInService>()),
