@@ -31,7 +31,7 @@ Future<void> setupLocator() async {
   getX.registerFactory<AddressRepo>(() => AddressRepoImpl(getX<BaseFirebaseService>()));
   getX.registerFactory(() => AddressSearchBloc(getX<AddressRepo>()));
   getX.registerFactory(() => HomeBloc(getX<BaseFirebaseService>()));
-  getX.registerFactory(() => ChatBloc(getX<ChatRepositoryImpl>()));
+  getX.registerFactory(() => ChatBloc(getX<ChatRepository>()));
   getX.registerFactory(
     () => AuthorizationBloc(getX<GetUsertypeData>(), getX<AuthRepository>()),
   );
@@ -42,7 +42,7 @@ Future<void> setupLocator() async {
   getX.registerLazySingleton(() => FirebaseAuth.instance);
   getX.registerLazySingleton(() => FirebaseFirestore.instance);
 
-  getX.registerFactory(() => ChatRepositoryImpl());
+  getX.registerFactory<ChatRepository>(() => ChatRepositoryImpl());
   getX.registerFactory<SocialSignInService>(() => SocialSignInServiceImpl());
   getX.registerLazySingleton<BaseFirebaseService>(
     () => FirebaseServiceImpl(getX<SocialSignInService>()),

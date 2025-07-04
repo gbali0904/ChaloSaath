@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../data/ChatEvent.dart';
 import '../data/ChatState.dart';
 import '../data/Message.dart';
-import '../domain/ChatRepositoryImpl.dart';
+import '../domain/ChatRepository.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
-  final ChatRepositoryImpl repository;
+  final ChatRepository repository;
   Stream<List<Message>>? _messageStream;
 
   ChatBloc(this.repository) : super(ChatInitial()) {
