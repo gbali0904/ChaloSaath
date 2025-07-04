@@ -6,10 +6,11 @@ class UserModel {
   final String role;
   final String? carNumber;
   final String? password;
-  final String? home_address;
-  final String? office_address;
+  final String? homeAddress;
+  final String? officeAddress;
   final bool? isRegister;
   final bool? isAddress;
+  final bool? isCarVerified;
 
   UserModel({
     required this.uid,
@@ -18,11 +19,12 @@ class UserModel {
     required this.phone,
     required this.role,
     this.carNumber,
-    this.home_address,
-    this.office_address,
+    this.homeAddress,
+    this.officeAddress,
     this.password,
     this.isRegister,
     this.isAddress,
+    this.isCarVerified,
   });
   UserModel copyWith({
     String? uid,
@@ -30,11 +32,12 @@ class UserModel {
     String? email,
     String? phone,
     String? role,
-    String? home_address,
-    String? office_address,
+    String? homeAddress,
+    String? officeAddress,
     String? carNumber,
     bool? isRegister,
     bool? isAddress,
+    bool? isCarVerified,
   }) {
     return UserModel(
       uid: uid ?? this.uid,
@@ -43,10 +46,11 @@ class UserModel {
       phone: phone ?? this.phone,
       role: role ?? this.role,
       carNumber: carNumber ?? this.carNumber,
-      home_address: home_address ?? this.home_address,
-      office_address: office_address ?? this.office_address,
+      homeAddress: homeAddress ?? this.homeAddress,
+      officeAddress: officeAddress ?? this.officeAddress,
       isRegister: isRegister ?? this.isRegister,
       isAddress: isAddress ?? this.isAddress,
+      isCarVerified: isCarVerified ?? this.isCarVerified,
     );
   }
   Map<String, dynamic> toJson() {
@@ -56,11 +60,12 @@ class UserModel {
       "email": email,
       "phone": phone,
       "role": role,
-      "home_address": home_address,
-      "office_address": office_address,
+      "homeAddress": homeAddress,
+      "officeAddress": officeAddress,
       "carNumber": carNumber,
       "isRegister": isRegister,
       "isAddress": isAddress,
+      "isCarVerified": isCarVerified,
     };
   }
 
@@ -72,11 +77,12 @@ class UserModel {
       phone: map['phone'] ?? '',
       role: map['role'] ?? '',
       carNumber: map['carNumber'],
-      home_address: map['home_address'],
-      office_address: map['office_address'],
+      homeAddress: map['homeAddress'],
+      officeAddress: map['officeAddress'],
       password: map['password'],
       isRegister: map['isRegister'],
       isAddress: map['isAddress'],
+      isCarVerified: map['isCarVerified'],
     );
   }
 
@@ -88,11 +94,12 @@ class UserModel {
       'phone': phone,
       'role': role,
       'carNumber': carNumber ?? '',
-      'home_address': home_address ?? '',
-      'office_address': office_address ?? '',
+      'homeAddress': homeAddress ?? '',
+      'officeAddress': officeAddress ?? '',
       'password': password,
       'isRegister': isRegister,
       'isAddress': isAddress,
+      'isCarVerified': isCarVerified,
     };
   }
 }

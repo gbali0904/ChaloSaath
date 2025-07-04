@@ -18,5 +18,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       }
 
     });
+    on<GetUserList>((event, emit) async {
+      emit(HomeLoading());
+      try {
+        final List<UserModel> userData = await firebase.getUserList(event.role);
+        emit(UserDataSuccess(userData));
+      } on FirebaseAuthException catch (e) {
+        emit(HomeError("${e.message}"));
+        throw Exception(e.message ?? 'Registration failed');
+      }
+
+    });
   }
 }

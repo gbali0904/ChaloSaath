@@ -80,16 +80,16 @@ class FirebaseServiceImpl implements BaseFirebaseService {
           .collection('users')
           .doc(userData.email)
           .update({
-            'homeAddress': userData.home_address,
-            'officeAddress': userData.office_address,
+            'homeAddress': userData.homeAddress,
+            'officeAddress': userData.officeAddress,
             'isAddress': userData.isAddress,
           });
       final docRef = FirebaseFirestore.instance
           .collection('users')
           .doc(userData.email);
         await docRef.update({
-          'homeAddress': userData.home_address,
-          'officeAddress': userData.office_address,
+          'homeAddress': userData.homeAddress,
+          'officeAddress': userData.officeAddress,
           'isAddress': userData.isAddress,
         });
 
@@ -113,5 +113,18 @@ class FirebaseServiceImpl implements BaseFirebaseService {
   Future<void> logout() async {
     await _auth.signOut();
     await _googleSignInService.logout();
+  }
+
+  @override
+  Future<List<UserModel>>  getUserList(String role) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('isAddress', isEqualTo: true)
+        .get();
+
+    return  snapshot.docs
+        .where((doc) => doc['role'] != role)
+        .map((doc) => UserModel.fromMap(doc.data()))
+        .toList();
   }
 }

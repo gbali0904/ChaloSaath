@@ -8,13 +8,15 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this._firebaseService);
 
   @override
-  Future<void> registerUser({required UserModel userData}) async {
+  Future<UserModel> registerUser({required UserModel userData}) async {
     try {
       await _firebaseService.saveUserData(userData.email, userData.toJson());
+      return userData;  // Return the same user model after saving
     } on FirebaseAuthException catch (e) {
       throw Exception(e.message ?? 'Registration failed');
     }
   }
+
 
   @override
   Future<UserCredential> loginUser({

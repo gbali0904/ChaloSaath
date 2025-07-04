@@ -19,8 +19,9 @@ import 'auth_bloc.dart';
 
 class SignUpScreen extends StatefulWidget {
   final AuthorizationBloc bloc;
+  final bool args;
 
-  const SignUpScreen({super.key, required this.bloc});
+  const SignUpScreen({super.key, required this.bloc, required this.args});
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -48,14 +49,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
     // TODO: implement initState
     super.initState();
     widget.bloc.add(LoadUserTypeData());
-    final userJson =getX<AppPreference>().getString(AppKey.googleData);
+    final userJson = widget.args == false
+        ? getX<AppPreference>().getString(AppKey.googleData)
+        : getX<AppPreference>().getString(AppKey.userData);
     final map = jsonDecode(userJson);
-    user= UserModel.fromMap(map);
-
+    user = UserModel.fromMap(map);
     emailController.text = user.email;
     fullNameController.text = user.fullName;
     uid = user.uid;
-    phoneController.text = user.phone != "null" ?user.phone : "";
+    phoneController.text = user.phone != "null" ? user.phone : "";
+    if (widget.args == true) {
+      selectedUserType = user.role;
+    }
+    if (widget.args == true && user.role == "Pilot") {
+      carNumberController.text = user.carNumber.toString();
+    }
   }
 
   @override
@@ -82,6 +90,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
             setState(() {
               isLoading = false;
             });
+            await getX<AppPreference>().setString(
+              AppKey.userData,
+              jsonEncode(state.userCredential),
+            );
             await getX<AppPreference>().setBool(AppKey.isLogin, true);
             Navigator.pushReplacementNamed(context, "/home");
           } else if (state is AuthFailure) {
@@ -101,6 +113,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   buildUI() {
     return CustomScaffold(
+      backpress: widget.args,
+      profile: true,
       body: Stack(
         children: [
           Container(
@@ -121,7 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     SizedBox(height: 50),
                     Center(
                       child: Text(
-                        "Create an account",
+                        "Update Account",
                         style: GoogleFonts.inter(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
@@ -345,7 +359,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               carNumber: selectedUserType == "Pilot"
                                   ? carNumberController.text.trim()
                                   : '',
-                                isRegister:true,
+                              isRegister: false,
+                              isCarVerified: false,
                             );
                             widget.bloc.add(RegisterUser(user));
                           }
