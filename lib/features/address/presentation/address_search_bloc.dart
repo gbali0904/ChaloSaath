@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../home/data/HomeState.dart';
 import '../data/AddressSearchEvent.dart';
 import '../data/AddressSearchState.dart';
-import '../domain/AddressRepo.dart';
+import '../domain/address_repo.dart';
 class AddressSearchBloc extends Bloc<AddressSearchEvent, AddressSearchState> {
 
   final AddressRepo repo;

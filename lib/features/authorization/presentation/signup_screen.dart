@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:chalosaath/features/authorization/data/authEvent.dart';
-import 'package:chalosaath/features/authorization/data/authState.dart';
 import 'package:chalosaath/features/helper/CustomScaffold.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -14,6 +12,8 @@ import '../../../core/storage/app_preferences.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../services/service_locator.dart';
 import '../../loader/CustomLoader.dart';
+import '../data/auth_event.dart';
+import '../data/auth_state.dart';
 import '../data/user_model.dart';
 import 'auth_bloc.dart';
 
@@ -49,11 +49,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
     // TODO: implement initState
     super.initState();
     widget.bloc.add(LoadUserTypeData());
-    final userJson = widget.args == false
-        ? getX<AppPreference>().getString(AppKey.googleData)
-        : getX<AppPreference>().getString(AppKey.userData);
-    final map = jsonDecode(userJson);
-    user = UserModel.fromMap(map);
+    try {
+      final userJson = widget.args == false
+          ? getX<AppPreference>().getString(AppKey.googleData)
+          : getX<AppPreference>().getString(AppKey.userData);
+      if (userJson != null && userJson.isNotEmpty) {
+        final map = jsonDecode(userJson);
+        user = UserModel.fromMap(map);
+      } else {
+        user = UserModel.empty();
+      }
+    } catch (e) {
+      print('Error loading user data in signup: $e');
+      user = UserModel.empty();
+    }
     emailController.text = user.email;
     fullNameController.text = user.fullName;
     uid = user.uid;
@@ -92,7 +101,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             });
             await getX<AppPreference>().setString(
               AppKey.userData,
-              jsonEncode(state.userCredential),
+              state.userCredential!.toJson(),
             );
             await getX<AppPreference>().setBool(AppKey.isLogin, true);
             Navigator.pushReplacementNamed(context, "/home");
@@ -359,8 +368,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               carNumber: selectedUserType == "Pilot"
                                   ? carNumberController.text.trim()
                                   : '',
-                              isRegister: false,
+                              isRegister: true,
                               isCarVerified: false,
+                              isEmailVerified: true,
                             );
                             widget.bloc.add(RegisterUser(user));
                           }

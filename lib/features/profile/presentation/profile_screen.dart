@@ -22,9 +22,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    final userJson = getX<AppPreference>().getString(AppKey.userData);
-    final map = jsonDecode(userJson);
-    user_data = UserModel.fromMap(map);
+    try {
+      final userJson = getX<AppPreference>().getString(AppKey.userData);
+      if (userJson != null && userJson.isNotEmpty) {
+        final map = jsonDecode(userJson);
+        user_data = UserModel.fromMap(map);
+      } else {
+        user_data = UserModel.empty();
+      }
+    } catch (e) {
+      print('Error loading user data in profile: $e');
+      user_data = UserModel.empty();
+    }
   }
 
   @override

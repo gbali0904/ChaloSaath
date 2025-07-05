@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:chalosaath/features/address/presentation/AddressForm.dart';
 import 'package:chalosaath/features/home/data/HomeState.dart';
-import 'package:chalosaath/features/home/presentation/HomeBloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -14,11 +12,13 @@ import '../../../core/theme/app_colors.dart';
 import '../../../services/service_locator.dart';
 import '../../address/data/AddressSearchEvent.dart';
 import '../../address/data/AddressSearchState.dart';
-import '../../address/presentation/AddressSearchBloc.dart';
+import '../../address/presentation/address_form.dart';
+import '../../address/presentation/address_search_bloc.dart';
 import '../../authorization/data/user_model.dart';
 import '../../helper/CustomScaffold.dart';
 import '../../loader/CustomLoader.dart';
 import '../data/HomeEvent.dart';
+import 'home_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   AddressSearchBloc bloc;
@@ -46,11 +46,24 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    final userJson = getX<AppPreference>().getString(AppKey.userData);
-    final map = jsonDecode(userJson);
-    user = UserModel.fromMap(map);
-    isAddress = user.isAddress ?? false;
-    widget.home_bloc.add(GetUserList(user.role));
+    try {
+      final userJson = getX<AppPreference>().getString(AppKey.userData);
+      if (userJson != null && userJson.isNotEmpty) {
+        final map = jsonDecode(userJson);
+        user = UserModel.fromMap(map);
+        isAddress = user.isAddress ?? false;
+        widget.home_bloc.add(GetUserList(user.role));
+      } else {
+        // Handle case when no user data is found
+        user = UserModel.empty();
+        isAddress = false;
+      }
+    } catch (e) {
+      print('Error loading user data: $e');
+      // Handle error case
+      user = UserModel.empty();
+      isAddress = false;
+    }
   }
 
   @override
@@ -71,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
               } else if (state is HomeLoaded) {
                 await getX<AppPreference>().setString(
                   AppKey.userData,
-                  jsonEncode(state.userData),
+                  state.userData.toJson(),
                 );
                 setState(() {
                   isLoading = false;

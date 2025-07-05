@@ -11,8 +11,8 @@ import '../../../core/storage/app_preferences.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../services/service_locator.dart';
 import '../../loader/CustomLoader.dart';
-import '../data/authEvent.dart';
-import '../data/authState.dart';
+import '../data/auth_event.dart';
+import '../data/auth_state.dart';
 import 'auth_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
               isLoading = false;
             });
             await getX<AppPreference>().setBool(AppKey.isLogin, true);
-            String data = jsonEncode( state.userCredential);
+            String data = state.userCredential.toJson();
             await getX<AppPreference>().setString(AppKey.userData,data);
           Navigator.pushReplacementNamed(context, "/home");
           } else if (state is AuthFailure) {

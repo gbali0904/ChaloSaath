@@ -2,7 +2,7 @@ import 'package:chalosaath/features/home/data/HomeEvent.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../authorization/data/user_model.dart';
-import '../../data_providers/domain/BaseFirebaseService.dart';
+import '../../data_providers/domain/base_firebase_service.dart';
 import '../../home/data/HomeState.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   BaseFirebaseService firebase;
