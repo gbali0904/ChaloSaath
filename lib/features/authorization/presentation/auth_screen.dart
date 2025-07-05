@@ -47,17 +47,13 @@ class _AuthScreenState extends State<AuthScreen> {
             if (state.userCredential != null &&
                 state.userCredential?.isRegister == true) {
               String data = state.userCredential!.toJson();
-              print("data $data");
               await getX<AppPreference>().setString(AppKey.userData, data);
               await getX<AppPreference>().setBool(AppKey.isLogin, true);
               Navigator.pushReplacementNamed(context, "/home");
             } else {
-              print("here come");
               Navigator.pushReplacementNamed(context, "/signup",arguments: true);
             }
           } else if (state is UserFail) {
-
-            print("here come1");
             setState(() {
               isLoading = false;
             });
@@ -73,7 +69,6 @@ class _AuthScreenState extends State<AuthScreen> {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(state.message)));
-            print("${state.message}");
           }
         },
         child: buildUI(),
