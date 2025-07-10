@@ -47,12 +47,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     try {
-      final userJson = getX<AppPreference>().getString(AppKey.userData);
+    final userJson = getX<AppPreference>().getString(AppKey.userData);
       if (userJson != null && userJson.isNotEmpty) {
-        final map = jsonDecode(userJson);
-        user = UserModel.fromMap(map);
-        isAddress = user.isAddress ?? false;
-        widget.home_bloc.add(GetUserList(user.role));
+    final map = jsonDecode(userJson);
+    user = UserModel.fromMap(map);
+    isAddress = user.isAddress ?? false;
+    widget.home_bloc.add(GetUserList(user.role));
       } else {
         // Handle case when no user data is found
         user = UserModel.empty();

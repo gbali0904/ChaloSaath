@@ -51,11 +51,11 @@ class _AddressScreenState extends State<AddressScreen> {
   void initState() {
     super.initState();
     try {
-      final userJson = getX<AppPreference>().getString(AppKey.userData);
+    final userJson = getX<AppPreference>().getString(AppKey.userData);
       if (userJson != null && userJson.isNotEmpty) {
-        final map = jsonDecode(userJson);
-        user = UserModel.fromMap(map);
-        isAddress = user.isAddress ?? false;
+    final map = jsonDecode(userJson);
+    user = UserModel.fromMap(map);
+    isAddress = user.isAddress ?? false;
       } else {
         user = UserModel.empty();
         isAddress = false;

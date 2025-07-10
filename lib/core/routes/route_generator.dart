@@ -1,4 +1,6 @@
+import 'package:chalosaath/features/profile/presentation/profile_setup_bloc.dart';
 import 'package:flutter/material.dart';
+import '../../features/profile/presentation/profile_setup_screen.dart';
 import 'route_constants.dart';
 import '../../features/splash/splash_screen.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
@@ -13,6 +15,8 @@ import '../../features/main/main_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
 import '../../features/address/presentation/address_form.dart';
 import '../../features/address/presentation/address_search_bloc.dart';
+import '../../features/phone/presentation/phone_verification_screen.dart';
+import '../../features/phone/presentation/phone_verification_bloc.dart';
 import '../../services/service_locator.dart';
 
 class RouteGenerator {
@@ -47,12 +51,12 @@ class RouteGenerator {
           ),
           settings: settings,
         );
-
+/*
       case RouteConstants.auth:
         return MaterialPageRoute(
           builder: (_) => AuthScreen(bloc: getX<AuthorizationBloc>()),
           settings: settings,
-        );
+        );*/
 
       case RouteConstants.home:
         return MaterialPageRoute(
@@ -96,6 +100,21 @@ class RouteGenerator {
           settings: settings,
         );
 
+      // Add this case for phone verification
+      case RouteConstants.phoneVerification:
+        return MaterialPageRoute(
+          builder: (_) => PhoneVerificationScreen(bloc: getX<PhoneVerificationBloc>()),
+          settings: settings,
+        );
+
+      // Add this case for profile setup
+      case '/profile-setup':
+       final args = settings.arguments as String? ?? "";
+        return MaterialPageRoute(
+          builder: (_) => ProfileSetupScreen(bloc: getX<ProfileSetupBloc>(), addressBloc: getX<AddressSearchBloc>(),args:args),
+          settings: settings,
+        );
+
       // Default case - redirect to splash screen
       default:
         return _buildSplashRoute(settings);
@@ -127,7 +146,7 @@ class RouteGenerator {
 
   static void navigateToAuth(BuildContext context) {
     Navigator.of(context).pushNamedAndRemoveUntil(
-      RouteConstants.auth,
+      RouteConstants.phoneVerification,
       (route) => false,
     );
   }

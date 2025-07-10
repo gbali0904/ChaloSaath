@@ -14,8 +14,8 @@ Future<void> main() async {
   ]);
 
   try {
-    await Firebase.initializeApp();
-    await setupLocator();
+  await Firebase.initializeApp();
+  await setupLocator();
     runApp(const MyApp());
   } catch (error) {
     debugPrint('Failed to initialize app: $error');

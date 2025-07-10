@@ -23,10 +23,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     try {
-      final userJson = getX<AppPreference>().getString(AppKey.userData);
+    final userJson = getX<AppPreference>().getString(AppKey.userData);
       if (userJson != null && userJson.isNotEmpty) {
-        final map = jsonDecode(userJson);
-        user_data = UserModel.fromMap(map);
+    final map = jsonDecode(userJson);
+    user_data = UserModel.fromMap(map);
       } else {
         user_data = UserModel.empty();
       }

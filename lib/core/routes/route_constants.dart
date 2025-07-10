@@ -7,10 +7,13 @@ class RouteConstants {
   static const String onboarding = '/onboarding';
   static const String login = '/login';
   static const String signup = '/signup';
-  static const String auth = '/auth';
+ // static const String auth = '/auth';
   static const String home = '/home';
   static const String main = '/main';
   static const String profile = '/profile';
+  // static const String phoneVerification = '/phoneVerification';
+  static const String phoneVerification = '/auth';
+  static const String profilesetup = '/profile-setup';
   static const String address = '/address';
   static const String addressSearch = '/address/search';
   static const String addressForm = '/address/form';

@@ -254,3 +254,4 @@ class CheckUser extends AuthEvent {
   final String email;
   const CheckUser(this.email);
 }
+ 
