@@ -1,69 +1,133 @@
+import 'dart:convert';
+
 import 'package:chalosaath/features/helper/CustomScaffold.dart';
-import 'package:chalosaath/features/profile/presentation/profile_setup_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
-import '../../authorization/data/user_model.dart';
-import '../../../services/service_locator.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import '../../address/presentation/address_search_bloc.dart';
 import '../../address/data/AddressSearchEvent.dart';
 import '../../address/data/AddressSearchState.dart';
+import '../../address/domain/address_repo_impl.dart';
+import '../../../core/storage/app_key.dart';
+import '../../../core/storage/app_preferences.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../services/service_locator.dart';
+import '../../loader/CustomLoader.dart';
+import '../../authorization/data/auth_event.dart';
+import '../../authorization/data/auth_state.dart';
+import '../../authorization/data/user_model.dart';
+import '../../authorization/presentation/auth_bloc.dart';
 
-class ProfileSetupScreen extends StatefulWidget {
-  ProfileSetupBloc bloc;
-  String args;
-  final AddressSearchBloc addressBloc;
+class ProfileSetUpScreen extends StatefulWidget {
+  final AuthorizationBloc bloc;
+  final bool args;
 
-  ProfileSetupScreen({super.key, required this.bloc, required this.args, required this.addressBloc});
+  const ProfileSetUpScreen({super.key, required this.bloc, required this.args});
 
   @override
-  State<ProfileSetupScreen> createState() => _ProfileSetupScreenState();
+  State<ProfileSetUpScreen> createState() => _ProfileSetUpScreenState();
 }
 
-class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
+class _ProfileSetUpScreenState extends State<ProfileSetUpScreen> {
   final _formKey = GlobalKey<FormState>();
+
+  String? selectedUserType;
+  List<String> userTypedata = [];
   final fullNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  final carNumberController = TextEditingController();
   final pickupController = TextEditingController();
   final dropoffController = TextEditingController();
-  final vehicleController = TextEditingController();
   bool isLoading = false;
-  List<String> _suggestions = [];
+  // Removed: List<String> _suggestions = [];
+
+  var uid = "";
+
+  late UserModel user;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    widget.bloc.add(LoadUserTypeData());
+    try {
+      final userJson = widget.args == false
+          ? getX<AppPreference>().getString(AppKey.googleData)
+          : getX<AppPreference>().getString(AppKey.userData);
+      if (userJson != null && userJson.isNotEmpty) {
+        final map = jsonDecode(userJson);
+        user = UserModel.fromMap(map);
+      } else {
+        user = UserModel.empty();
+      }
+    } catch (e) {
+      print('Error loading user data in signup: $e');
+      user = UserModel.empty();
+    }
+    emailController.text = user.email;
+    fullNameController.text = user.fullName;
+    uid = user.uid;
+    phoneController.text = user.phone != "null" ? user.phone : "";
+    if (widget.args == true) {
+      selectedUserType = user.role;
+    }
+    if (widget.args == true && user.role == "Pilot") {
+      carNumberController.text = user.carNumber.toString();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<ProfileSetupBloc>.value(value: widget.bloc),
-        BlocProvider<AddressSearchBloc>.value(value: widget.addressBloc),
+        BlocProvider<AuthorizationBloc>.value(value: widget.bloc),
+        BlocProvider<AddressSearchBloc>(
+          create: (_) => AddressSearchBloc(AddressRepoImpl(getX())),
+        ),
       ],
-      child: MultiBlocListener(
-        listeners: [
-          BlocListener<ProfileSetupBloc, ProfileSetupState>(
-            listener: (context, state) {
-              if (state is ProfileSetupLoading) {
-                setState(() => isLoading = true);
-              } else if (state is ProfileSetupSuccess) {
-                setState(() => isLoading = false);
-                Navigator.pushReplacementNamed(context, '/home');
-              } else if (state is ProfileSetupFailure) {
-                setState(() => isLoading = false);
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.message)));
-              }
-            },
-          ),
-          BlocListener<AddressSearchBloc, AddressSearchState>(
-            listener: (context, state) {
-              if (state is AddressLoaded) {
-                setState(() {
-                  _suggestions = state.suggestions;
-                });
-              }
-            },
-          ),
-        ],
+      child: BlocListener<AuthorizationBloc, AuthState>(
+        listener: (context, state) async {
+          if (state is UserTypeLoaded) {
+            setState(() {
+              isLoading = false;
+              userTypedata = state.data;
+            });
+          } else if (state is RoleChangedData) {
+            setState(() {
+              isLoading = false;
+              selectedUserType = state.data;
+            });
+          } else if (state is AuthLoading) {
+            setState(() {
+              isLoading = true;
+            });
+          } else if (state is AuthSuccess) {
+            setState(() {
+              isLoading = false;
+            });
+            await getX<AppPreference>().setString(
+              AppKey.userData,
+              state.userCredential!.toJson(),
+            );
+            await getX<AppPreference>().setBool(AppKey.isLogin, true);
+            Navigator.pushReplacementNamed(context, "/home");
+          } else if (state is AuthFailure) {
+            setState(() {
+              isLoading = false;
+            });
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
+            print("${state.message}");
+          }
+        },
         child: CustomScaffold(
           profile: true,
           body: Center(
@@ -90,7 +154,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       CircleAvatar(
-                        radius: 40,
+                        radius: 30,
                         backgroundColor: const Color(0xFF232B3B),
                         child: Icon(
                           Icons.person,
@@ -98,23 +162,25 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                           size: 40,
                         ),
                       ),
-                      const SizedBox(height: 32),
-                      const Text(
-                        'Setup Profile',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF232B3B),
+                      const SizedBox(height: 20),
+                      Center(
+                        child: Text(
+                          "Setup Profile",
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF232B3B),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 8),
-                      const Text(
-                        'Tell us a bit about yourself',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Color(0xFF8A94A6),
+                      Center(
+                        child: Text(
+                          "Tell us a bit about yourself",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Color(0xFF8A94A6),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 32),
@@ -126,7 +192,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                       TextFormField(
                         controller: fullNameController,
                         decoration: InputDecoration(
-                          hintText: 'Enter your full name',
+                          hintText: "Enter your full name",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -138,37 +204,77 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                       ),
                       const SizedBox(height: 24),
                       const Text(
+                        'Mobile Number',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: phoneController,
+                        keyboardType: TextInputType.phone,
+                        maxLength: 10,
+                        decoration: InputDecoration(
+                          hintText: 'Enter your mobile number',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          prefixIcon: Icon(Icons.phone),
+                          counterText: '',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) return 'Enter mobile number';
+                          if (value.length != 10) return 'Enter 10 digit number';
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      const Text(
                         'Pickup Location',
                         style: TextStyle(fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 8),
-                      TypeAheadField<String>(
-                        controller: pickupController,
-                        suggestionsCallback: (pattern) {
-                          if (pattern.isNotEmpty) {
-                            widget.addressBloc.add(FetchAddressSuggestions(pattern));
+                      BlocBuilder<AddressSearchBloc, AddressSearchState>(
+                        builder: (context, state) {
+                          List<String> suggestions = [];
+                          if (state is AddressLoaded) {
+                            suggestions = state.suggestions;
                           }
-                          return _suggestions;
-                        },
-                        itemBuilder: (context, suggestion) {
-                          return ListTile(title: Text(suggestion));
-                        },
-                        onSelected: (suggestion) {
-                          pickupController.text = suggestion;
-                        },
-                        builder: (context, controller, focusNode) {
-                          return TextFormField(
-                            controller: controller,
-                            focusNode: focusNode,
-                            decoration: InputDecoration(
-                              hintText: 'Where do you usually start from?',
-                              border: OutlineInputBorder(
+                          return TypeAheadField<String>(
+                            controller: pickupController,
+                            suggestionsCallback: (pattern) {
+                              if (pattern.isNotEmpty) {
+                                context.read<AddressSearchBloc>().add(FetchAddressSuggestions(pattern));
+                              }
+                              return suggestions;
+                            },
+                            itemBuilder: (context, suggestion) {
+                              return ListTile(title: Text(suggestion));
+                            },
+                            onSelected: (suggestion) {
+                              pickupController.text = suggestion;
+                            },
+                            builder: (context, controller, focusNode) {
+                              return TextFormField(
+                                controller: controller,
+                                focusNode: focusNode,
+                                decoration: InputDecoration(
+                                  hintText: 'Where do you usually start from?',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                validator: (value) => value == null || value.isEmpty
+                                    ? 'Enter pickup location'
+                                    : null,
+                              );
+                            },
+                            decorationBuilder: (context, child) {
+                              return Material(
+                                color: Colors.white,
+                                elevation: 4,
                                 borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            validator: (value) => value == null || value.isEmpty
-                                ? 'Enter pickup location'
-                                : null,
+                                child: child,
+                              );
+                            },
                           );
                         },
                       ),
@@ -178,58 +284,65 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                         style: TextStyle(fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 8),
-                      TypeAheadField<String>(
-                        controller: dropoffController,
-                        suggestionsCallback: (pattern) {
-                          if (pattern.isNotEmpty) {
-                            widget.addressBloc.add(FetchAddressSuggestions(pattern));
+                      BlocBuilder<AddressSearchBloc, AddressSearchState>(
+                        builder: (context, state) {
+                          List<String> suggestions = [];
+                          if (state is AddressLoaded) {
+                            suggestions = state.suggestions;
                           }
-                          return _suggestions;
-                        },
-                        itemBuilder: (context, suggestion) {
-                          return ListTile(title: Text(suggestion));
-                        },
-                        onSelected: (suggestion) {
-                          dropoffController.text = suggestion;
-                        },
-                        builder: (context, controller, focusNode) {
-                          return TextFormField(
-                            controller: controller,
-                            focusNode: focusNode,
-                            decoration: InputDecoration(
-                              hintText: 'Where do you usually go?',
-                              border: OutlineInputBorder(
+                          return TypeAheadField<String>(
+                            controller: dropoffController,
+                            suggestionsCallback: (pattern) {
+                              if (pattern.isNotEmpty) {
+                                context.read<AddressSearchBloc>().add(FetchAddressSuggestions(pattern));
+                              }
+                              return suggestions;
+                            },
+                            itemBuilder: (context, suggestion) {
+                              return ListTile(title: Text(suggestion));
+                            },
+                            onSelected: (suggestion) {
+                              dropoffController.text = suggestion;
+                            },
+                            builder: (context, controller, focusNode) {
+                              return TextFormField(
+                                controller: controller,
+                                focusNode: focusNode,
+                                decoration: InputDecoration(
+                                  hintText: 'Where do you usually go?',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                validator: (value) => value == null || value.isEmpty
+                                    ? 'Enter drop-off location'
+                                    : null,
+                              );
+                            },
+                            decorationBuilder: (context, child) {
+                              return Material(
+                                color: Colors.white,
+                                elevation: 4,
                                 borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            validator: (value) => value == null || value.isEmpty
-                                ? 'Enter drop-off location'
-                                : null,
+                                child: child,
+                              );
+                            },
                           );
                         },
                       ),
                       const SizedBox(height: 24),
                       Row(
                         children: const [
-                          Text(
-                            'Vehicle Details',
-                            style: TextStyle(fontWeight: FontWeight.w600),
-                          ),
+                          Text('Vehicle Details', style: TextStyle(fontWeight: FontWeight.w600)),
                           SizedBox(width: 4),
-                          Text(
-                            '(Optional)',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Color(0xFF8A94A6),
-                            ),
-                          ),
+                          Text('(Optional)', style: TextStyle(fontSize: 12, color: Color(0xFF8A94A6))),
                         ],
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
-                        controller: vehicleController,
+                        controller: carNumberController,
                         decoration: InputDecoration(
-                          hintText: 'Honda City - MH01AB1234',
+                          hintText: 'MH01AB1234',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -240,7 +353,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF8A94A6),
+                            backgroundColor: Colors.grey,
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
@@ -249,24 +362,26 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               final user = UserModel(
+                                uid: uid,
                                 fullName: fullNameController.text.trim(),
-                                homeAddress: pickupController.text.trim(),
-                                officeAddress: dropoffController.text.trim(),
-                                carNumber: vehicleController.text.trim(),
+                                email: emailController.text.trim(),
+                                phone: phoneController.text.trim(),
+                                role: selectedUserType ?? '',
+                                carNumber: selectedUserType == "Pilot"
+                                    ? carNumberController.text.trim()
+                                    : '',
                                 isRegister: true,
-                                uid: Uuid().v1(),
-                                email: '',
-                                phone: widget.args,
-                                role: '',
-                                // Add other required fields as needed
+                                isCarVerified: false,
+                                isEmailVerified: true,
+                                isAddress: true,
+                                homeAddress: pickupController.text,
+                                officeAddress: dropoffController.text,
                               );
-                              widget.bloc.add(ProfileSetupSubmitted(user));
+                              widget.bloc.add(RegisterUser(user));
                             }
                           },
                           child: isLoading
-                              ? const CircularProgressIndicator(
-                                  color: Colors.white,
-                                )
+                              ? const CircularProgressIndicator(color: Colors.white)
                               : const Text(
                                   'Complete Setup',
                                   style: TextStyle(

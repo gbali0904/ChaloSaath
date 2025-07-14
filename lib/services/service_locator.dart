@@ -17,7 +17,6 @@ import '../features/data_providers/domain/social_sign_in_service.dart';
 import '../features/home/presentation/home_bloc.dart';
 import '../features/onboarding/domain/get_onboarding_data.dart';
 import '../features/onboarding/presentation/onboarding_bloc.dart';
-import '../features/phone/presentation/phone_verification_bloc.dart';
 import '../features/profile/presentation/profile_setup_bloc.dart';
 
 final getX = GetIt.instance;
@@ -32,7 +31,6 @@ Future<void> setupLocator() async {
   getX.registerFactory(
     () => AuthorizationBloc(getX<GetUsertypeData>(), getX<AuthRepository>()),
   );
-  getX.registerFactory(() => PhoneVerificationBloc(getX<BaseFirebaseService>()));
   getX.registerFactory(() => ProfileSetupBloc(getX<BaseFirebaseService>()));
 
   final sharedPrefs = await SharedPreferences.getInstance();

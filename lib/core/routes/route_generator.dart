@@ -5,8 +5,7 @@ import 'route_constants.dart';
 import '../../features/splash/splash_screen.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/onboarding/presentation/onboarding_bloc.dart';
-import '../../features/authorization/presentation/login_screen.dart';
-import '../../features/authorization/presentation/signup_screen.dart';
+import '../../features/profile/presentation/profile_setup_screen.dart';
 import '../../features/authorization/presentation/auth_screen.dart';
 import '../../features/authorization/presentation/auth_bloc.dart';
 import '../../features/home/presentation/home_screen.dart';
@@ -15,8 +14,6 @@ import '../../features/main/main_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
 import '../../features/address/presentation/address_form.dart';
 import '../../features/address/presentation/address_search_bloc.dart';
-import '../../features/phone/presentation/phone_verification_screen.dart';
-import '../../features/phone/presentation/phone_verification_bloc.dart';
 import '../../services/service_locator.dart';
 
 class RouteGenerator {
@@ -35,17 +32,10 @@ class RouteGenerator {
           builder: (_) => OnboardingScreen(bloc: getX<OnboardingBloc>()),
           settings: settings,
         );
-
-      case RouteConstants.login:
-        return MaterialPageRoute(
-          builder: (_) => LoginScreen(bloc: getX<AuthorizationBloc>()),
-          settings: settings,
-        );
-
       case RouteConstants.signup:
         final args = settings.arguments as bool? ?? false;
         return MaterialPageRoute(
-          builder: (_) => SignUpScreen(
+          builder: (_) => ProfileSetUpScreen(
             bloc: getX<AuthorizationBloc>(),
             args: args,
           ),
@@ -96,21 +86,6 @@ class RouteGenerator {
             home_bloc: getX<HomeBloc>(),
             arg: false,
           ),
-          settings: settings,
-        );
-
-      // Add this case for phone verification
-      case RouteConstants.phoneVerification:
-        return MaterialPageRoute(
-          builder: (_) => PhoneVerificationScreen(bloc: getX<PhoneVerificationBloc>()),
-          settings: settings,
-        );
-
-      // Add this case for profile setup
-      case RouteConstants.profilesetup:
-       final args = settings.arguments as String? ?? "";
-        return MaterialPageRoute(
-          builder: (_) => ProfileSetupScreen(bloc: getX<ProfileSetupBloc>(), addressBloc: getX<AddressSearchBloc>(),args:args),
           settings: settings,
         );
 
