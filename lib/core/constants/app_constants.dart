@@ -88,4 +88,14 @@ class AppConstants {
   static const int minPasswordLength = 6;
   static const int maxPhoneLength = 15;
   static const int maxAddressLength = 200;
+
+
+  static const String tagline = 'Your Journey, Shared';
+  static const String welcome = 'Welcome to Chalo Saath';
+  static const String description = 'Your trusted carpooling companion. Share rides, save money, and make new connections.';
+  static const String safe = 'Safe';
+  static const String easy = 'Easy';
+  static const String reliable = 'Reliable';
+  static const String loginWithGoogle = 'Login with Google';
+  static const String secureAuth = 'Secure authentication powered by Google';
 } 

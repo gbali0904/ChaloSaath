@@ -51,12 +51,11 @@ class RouteGenerator {
           ),
           settings: settings,
         );
-/*
       case RouteConstants.auth:
         return MaterialPageRoute(
           builder: (_) => AuthScreen(bloc: getX<AuthorizationBloc>()),
           settings: settings,
-        );*/
+        );
 
       case RouteConstants.home:
         return MaterialPageRoute(
@@ -108,7 +107,7 @@ class RouteGenerator {
         );
 
       // Add this case for profile setup
-      case '/profile-setup':
+      case RouteConstants.profilesetup:
        final args = settings.arguments as String? ?? "";
         return MaterialPageRoute(
           builder: (_) => ProfileSetupScreen(bloc: getX<ProfileSetupBloc>(), addressBloc: getX<AddressSearchBloc>(),args:args),
