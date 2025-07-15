@@ -15,13 +15,15 @@ class OfferRideScreen extends StatefulWidget {
   final OfferRideBloc offerRideBloc;
   final bool showAppBar;
   final bool showBottomBar;
+  final bool showtitle;
 
   const OfferRideScreen({
     super.key,
     required this.addressBloc,
     required this.offerRideBloc,
-    this.showAppBar = true,
+    this.showAppBar = false,
     this.showBottomBar = true,
+    this.showtitle = true,
   });
 
   @override
@@ -80,7 +82,7 @@ class _OfferRideScreenState extends State<OfferRideScreen> {
         child: CustomBottomNavBar(
           context:context,
           appbarstatus: widget.showAppBar,
-          title: widget.showAppBar ? "Offer a Ride" : "",
+          title: widget.showtitle ? "Offer a Ride" : "",
           showBottomBar: widget.showBottomBar,
           body: BlocBuilder<OfferRideBloc, OfferRideState>(
             builder: (context, state) {

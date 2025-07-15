@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../home/data/HomeState.dart';
+import '../../home/data/home_state.dart';
 import '../data/AddressSearchEvent.dart';
 import '../data/AddressSearchState.dart';
 import '../domain/address_repo.dart';

@@ -1,6 +1,8 @@
 import 'package:chalosaath/features/authorization/data/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../home/data/Ride.dart';
+
 abstract class BaseFirebaseService {
   Future<void> saveUserData(String phone, UserModel userData);
   Future<UserCredential> loginWithEmail(String email, String password);
@@ -12,6 +14,7 @@ abstract class BaseFirebaseService {
   Future<void> saveLocations(List<String> locations);
   Future<List<String>> searchLocationsFromFirebase(String query);
   Future<List<UserModel>>  getUserList(String role) ;
+  Future<List<Ride>>  getRideList() ;
   Future<void> saveRide(Map<String, dynamic> rideData);
 
   // Phone Auth

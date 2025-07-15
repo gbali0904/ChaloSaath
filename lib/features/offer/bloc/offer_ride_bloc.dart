@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import '../../authorization/data/user_model.dart';
 import 'offer_ride_event.dart';
 import 'offer_ride_state.dart';
 import '../../data_providers/domain/base_firebase_service.dart';
 import '../../../services/service_locator.dart';
+import '../../../core/storage/app_preferences.dart';
+import '../../../core/storage/app_key.dart';
 
 class OfferRideBloc extends Bloc<OfferRideEvent, OfferRideState> {
   final BaseFirebaseService firebaseService;
@@ -24,6 +29,10 @@ class OfferRideBloc extends Bloc<OfferRideEvent, OfferRideState> {
   Future<void> _onSubmit(SubmitOfferRide event, Emitter<OfferRideState> emit) async {
     emit(state.copyWith(isLoading: true, error: null, isSuccess: false));
     try {
+      final userJson = getX<AppPreference>().getString(AppKey.userData);
+      final map = jsonDecode(userJson);
+      var user = UserModel.fromMap(map);
+      final userEmail = user.email;
       final rideData = {
         'pickup': state.pickup,
         'destination': state.destination,
@@ -34,6 +43,7 @@ class OfferRideBloc extends Bloc<OfferRideEvent, OfferRideState> {
         'fare': state.fare,
         'notes': state.notes,
         'createdAt': DateTime.now().toIso8601String(),
+        'userEmail': userEmail,
       };
       await firebaseService.saveRide(rideData);
       emit(state.copyWith(isLoading: false, isSuccess: true));

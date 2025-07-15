@@ -1,6 +1,12 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../../core/storage/app_key.dart';
+import '../../../core/storage/app_preferences.dart';
+import '../../../services/service_locator.dart';
 import '../../authorization/data/user_model.dart';
+import '../../home/data/Ride.dart';
 import '../domain/base_firebase_service.dart';
 import '../domain/social_sign_in_service.dart';
 
@@ -160,4 +166,47 @@ class FirebaseServiceImpl implements BaseFirebaseService {
   Future<void> saveRide(Map<String, dynamic> rideData) async {
     await FirebaseFirestore.instance.collection('rides').add(rideData);
   }
+
+  @override
+  Future<List<Ride>> getRideList() async {
+    // Get current user
+    final userJson = getX<AppPreference>().getString(AppKey.userData);
+    final map = jsonDecode(userJson);
+    final currentUser = UserModel.fromMap(map);
+    final currentEmail = currentUser.email;
+
+    // Fetch all rides from Firestore (excluding current user)
+    final rideSnapshot = await FirebaseFirestore.instance.collection('rides').get();
+    final filteredRides = rideSnapshot.docs
+        .map((doc) => Ride.fromMap(doc.id, doc.data()))
+        .where((ride) => ride.userEmail != currentEmail)
+        .toList();
+
+    if (filteredRides.isEmpty) return [];
+
+    // Get all unique rider emails from those rides
+    final riderEmails = filteredRides.map((r) => r.userEmail).toSet().toList();
+
+    // Fetch users whose email is in riderEmails
+    final userSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('email', whereIn: riderEmails)
+        .get();
+
+    // Map email -> UserModel
+    final riderMap = {
+      for (var doc in userSnapshot.docs)
+        doc['email']: UserModel.fromMap(doc.data())
+    };
+
+    // Attach rider info to each ride
+    final enrichedRides = filteredRides.map((ride) {
+      final rider = riderMap[ride.userEmail];
+      return ride.copyWithRider(rider!);
+    }).toList();
+
+    return enrichedRides;
+  }
+
+
 }

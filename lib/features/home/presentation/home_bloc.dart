@@ -1,9 +1,9 @@
-import 'package:chalosaath/features/home/data/HomeEvent.dart';
+import 'package:chalosaath/features/home/data/home_event.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../authorization/data/user_model.dart';
 import '../../data_providers/domain/base_firebase_service.dart';
-import '../../home/data/HomeState.dart';
+import '../../home/data/home_state.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   BaseFirebaseService firebase;
   HomeBloc(this.firebase) : super(HomeLoading()) {
@@ -23,6 +23,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       try {
         final List<UserModel> userData = await firebase.getUserList(event.role);
         emit(UserDataSuccess(userData));
+      } on FirebaseAuthException catch (e) {
+        emit(HomeError("${e.message}"));
+        throw Exception(e.message ?? 'Registration failed');
+      }
+
+    });
+
+    on<GetRideList>((event, emit) async {
+      emit(HomeLoading());
+      try {
+       var rideList = await firebase.getRideList();
+       emit(RideDataSuccess(rideList));
       } on FirebaseAuthException catch (e) {
         emit(HomeError("${e.message}"));
         throw Exception(e.message ?? 'Registration failed');
