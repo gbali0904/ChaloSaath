@@ -29,7 +29,7 @@ class CustomBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var currentIndex = 2;
+    var currentIndex = 1;
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: appbarstatus == true?appbar:
@@ -72,10 +72,10 @@ class CustomBottomNavBar extends StatelessWidget {
               },
               backgroundColor: Colors.white,
               items: const [
-                BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Find'),
+             //   BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Find'),
                 BottomNavigationBarItem(icon: Icon(Icons.directions_car), label: 'Offer'),
                 BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-                BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'My Rides'),
+            //    BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'My Rides'),
                 BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
               ],
             )
@@ -84,11 +84,11 @@ class CustomBottomNavBar extends StatelessWidget {
   }
 
   void onTabChanged(int index, BuildContext context) {
-    if (index == 4) {
+    if (index == 3) {
       Navigator.pushReplacementNamed(context, RouteConstants.profile);
-    } else if (index == 2) {
-      Navigator.pushReplacementNamed(context, RouteConstants.home);
     } else if (index == 1) {
+      Navigator.pushReplacementNamed(context, RouteConstants.home);
+    } else if (index == 0) {
       Navigator.pushReplacementNamed(context,  RouteConstants.offerRide);
     }
   }

@@ -289,6 +289,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildRideCard(Ride ride, int index) {
     final isHosting = index % 2 == 0;
     final status = 'Booking';
+    final additional_note = ride.notes != "" ? ride.notes :"";
     final time = ride.time;
     final route =
         "${ride.pickup.split(",").first} -> ${ride.destination.split(",").first}";
@@ -357,7 +358,10 @@ class _HomeScreenState extends State<HomeScreen> {
               style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
             ),
             const SizedBox(height: 4),
+            Text(additional_note ,style: const TextStyle(fontSize: 10, color: Colors.red)),
+                const SizedBox(height: 4),
             Divider(),
+            const SizedBox(height: 4),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
