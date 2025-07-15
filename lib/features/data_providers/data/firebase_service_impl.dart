@@ -155,4 +155,9 @@ class FirebaseServiceImpl implements BaseFirebaseService {
   PhoneAuthCredential getPhoneCredential(String verificationId, String smsCode) {
     return PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
   }
+
+  @override
+  Future<void> saveRide(Map<String, dynamic> rideData) async {
+    await FirebaseFirestore.instance.collection('rides').add(rideData);
+  }
 }

@@ -13,6 +13,8 @@ import '../../authorization/data/user_model.dart';
 import '../../helper/custome_bottom_nav_bar.dart';
 import '../data/HomeEvent.dart';
 import 'home_bloc.dart';
+import '../../offer/presentation/offer_ride_screen.dart';
+import '../../offer/bloc/offer_ride_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   AddressSearchBloc bloc;
@@ -437,7 +439,12 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: selectedTab == 0
                 ? _buildFindRideTab()
-                : Container(color: Colors.black),
+                : OfferRideScreen(
+                    addressBloc: getX<AddressSearchBloc>(),
+                    offerRideBloc: getX<OfferRideBloc>(),
+                    showAppBar: false,
+                    showBottomBar: false,
+                  ),
           ),
         ],
       ),

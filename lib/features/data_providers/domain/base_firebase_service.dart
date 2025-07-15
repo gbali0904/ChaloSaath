@@ -12,6 +12,7 @@ abstract class BaseFirebaseService {
   Future<void> saveLocations(List<String> locations);
   Future<List<String>> searchLocationsFromFirebase(String query);
   Future<List<UserModel>>  getUserList(String role) ;
+  Future<void> saveRide(Map<String, dynamic> rideData);
 
   // Phone Auth
   Future<void> verifyPhoneNumber({

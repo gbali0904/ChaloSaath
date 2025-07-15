@@ -10,7 +10,6 @@ import '../../../core/storage/app_key.dart';
 import '../../../core/storage/app_preferences.dart';
 import '../../../services/service_locator.dart';
 import '../../authorization/data/user_model.dart';
-import '../../../core/theme/theme_bloc.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -261,18 +260,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   title: const Text('Notifications'),
                   subtitle: const Text('Ride alerts and updates'),
                 ),
-                BlocBuilder<ThemeBloc, ThemeState>(
-                  builder: (context, themeState) {
-                    return SwitchListTile(
-                      value: themeState.isDarkMode,
-                      onChanged: (val) {
-                        context.read<ThemeBloc>().add(ToggleThemeEvent(val));
-                        getX<AppPreference>().setBool(AppKey.isFirstLaunch, val); // Use your theme key
-                      },
-                      title: const Text('Dark Mode'),
-                      subtitle: const Text('Change app appearance'),
-                    );
-                  },
+                SwitchListTile(
+                  value: darkModeEnabled,
+                  onChanged: (val) => setState(() => darkModeEnabled = val),
+                  title: const Text('Dark Mode'),
+                  subtitle: const Text('Change app appearance'),
                 ),
                 ListTile(
                   leading: const Icon(Icons.help_outline),

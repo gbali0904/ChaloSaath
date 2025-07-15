@@ -15,6 +15,8 @@ import '../../features/profile/presentation/profile_screen.dart';
 import '../../features/address/presentation/address_form.dart';
 import '../../features/address/presentation/address_search_bloc.dart';
 import '../../services/service_locator.dart';
+import '../../features/offer/presentation/offer_ride_screen.dart';
+import '../../features/offer/bloc/offer_ride_bloc.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -85,6 +87,15 @@ class RouteGenerator {
             bloc: getX<AddressSearchBloc>(),
             home_bloc: getX<HomeBloc>(),
             arg: false,
+          ),
+          settings: settings,
+        );
+
+      case RouteConstants.offerRide:
+        return MaterialPageRoute(
+          builder: (_) => OfferRideScreen(
+            addressBloc: getX<AddressSearchBloc>(),
+            offerRideBloc: getX<OfferRideBloc>(),
           ),
           settings: settings,
         );

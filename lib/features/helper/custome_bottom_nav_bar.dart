@@ -12,6 +12,7 @@ class CustomBottomNavBar extends StatelessWidget {
   final String? title;
   final VoidCallback? onBackPress;
   final BuildContext? context;
+  final bool showBottomBar;
 
   const CustomBottomNavBar({
     super.key,
@@ -23,6 +24,7 @@ class CustomBottomNavBar extends StatelessWidget {
     this.appbar,
     this.profile = false,
     this.onBackPress,
+    this.showBottomBar = true,
   });
 
   @override
@@ -30,69 +32,54 @@ class CustomBottomNavBar extends StatelessWidget {
     var currentIndex = 2;
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: appbarstatus == false
-          ? AppBar(
-              automaticallyImplyLeading: backpress,
-              title: Text(
-                title.toString(),
-                style: TextStyle(
-                  color: AppColors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              centerTitle: true,
-              backgroundColor: AppColors.primary,
-              iconTheme: IconThemeData(color: AppColors.white),
-              leading: backpress
-                  ? IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: () {
-                        if (onBackPress != null) {
-                          onBackPress!();
-                        } else {
-                          Navigator.of(context).pop();
-                        }
-                      },
-                    )
-                  : null,
-            /*  actions: [
-                ?profile == false
-                    ? IconButton(
-                        icon: const Icon(Icons.account_circle, size: 28),
-                        onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            "/profile",
-                          ); // or your desired route
-                        },
-                      )
-                    : null,
-              ],*/
-            )
-          : appbar,
+      appBar: appbarstatus == true?appbar:
+      title != "" ? AppBar(
+        automaticallyImplyLeading: backpress,
+        title: Text(
+          title.toString(),
+          style: TextStyle(
+            color: AppColors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: AppColors.primary,
+        iconTheme: IconThemeData(color: AppColors.white),
+        leading: backpress
+            ? IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            if (onBackPress != null) {
+              onBackPress!();
+            } else {
+              Navigator.of(context).pop();
+            }
+          },
+        )
+            : null,
+      ):null,
 
       body: body,
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: const Color(0xFF232B3B),
-        unselectedItemColor: const Color(0xFF8A94A6),
-        showUnselectedLabels: true,
-        currentIndex: currentIndex,
-        onTap: (index) {
-          onTabChanged(index, context);
-        },
-        backgroundColor: Colors.white,
-        items: const [
-
-    BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Find'),
-    BottomNavigationBarItem(icon: Icon(Icons.directions_car), label: 'Offer'),
-
-    BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-    BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'My Rides'),
-    BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-
-        ],
-      ),
+      bottomNavigationBar: showBottomBar
+          ? BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              selectedItemColor: const Color(0xFF232B3B),
+              unselectedItemColor: const Color(0xFF8A94A6),
+              showUnselectedLabels: true,
+              currentIndex: currentIndex,
+              onTap: (index) {
+                onTabChanged(index, context);
+              },
+              backgroundColor: Colors.white,
+              items: const [
+                BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Find'),
+                BottomNavigationBarItem(icon: Icon(Icons.directions_car), label: 'Offer'),
+                BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+                BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'My Rides'),
+                BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+              ],
+            )
+          : null,
     );
   }
 
@@ -101,6 +88,8 @@ class CustomBottomNavBar extends StatelessWidget {
       Navigator.pushReplacementNamed(context, RouteConstants.profile);
     } else if (index == 2) {
       Navigator.pushReplacementNamed(context, RouteConstants.home);
+    } else if (index == 1) {
+      Navigator.pushReplacementNamed(context,  RouteConstants.offerRide);
     }
   }
 }

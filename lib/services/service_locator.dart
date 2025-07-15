@@ -18,6 +18,7 @@ import '../features/home/presentation/home_bloc.dart';
 import '../features/onboarding/domain/get_onboarding_data.dart';
 import '../features/onboarding/presentation/onboarding_bloc.dart';
 import '../features/profile/presentation/profile_setup_bloc.dart';
+import '../features/offer/bloc/offer_ride_bloc.dart';
 
 final getX = GetIt.instance;
 
@@ -28,6 +29,7 @@ Future<void> setupLocator() async {
   getX.registerFactory<AddressRepo>(() => AddressRepoImpl(getX<BaseFirebaseService>()));
   getX.registerFactory(() => AddressSearchBloc(getX<AddressRepo>()));
   getX.registerFactory(() => HomeBloc(getX<BaseFirebaseService>()));
+  getX.registerFactory(() => OfferRideBloc(firebase: getX<BaseFirebaseService>()));
   getX.registerFactory(
     () => AuthorizationBloc(getX<GetUsertypeData>(), getX<AuthRepository>()),
   );
