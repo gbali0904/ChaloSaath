@@ -1,10 +1,10 @@
-import 'package:chalosaath/features/authorization/data/authEvent.dart';
-import 'package:chalosaath/features/authorization/data/authState.dart';
-import 'package:chalosaath/features/authorization/domain/get_userType_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../data/auth_event.dart';
+import '../data/auth_state.dart';
 import '../data/user_model.dart';
+import '../domain/get_user_type_data.dart';
 import '../domain/repositories/auth_repository.dart';
 
 class AuthorizationBloc extends Bloc<AuthEvent, AuthState>

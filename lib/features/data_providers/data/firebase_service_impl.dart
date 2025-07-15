@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../authorization/data/user_model.dart';
-import '../domain/BaseFirebaseService.dart';
-import '../domain/SocialSignInService.dart';
+import '../domain/base_firebase_service.dart';
+import '../domain/social_sign_in_service.dart';
 
 class FirebaseServiceImpl implements BaseFirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -33,8 +33,8 @@ class FirebaseServiceImpl implements BaseFirebaseService {
   }
 
   @override
-  Future<void> saveUserData(String email, Map<String, dynamic> userData) async {
-    await _firestore.collection('users').doc(email).set(userData);
+  Future<void> saveUserData(String phone, UserModel userData) async {
+    await _firestore.collection('users').doc(phone).set(userData.toMap());
   }
 
   @override
@@ -126,5 +126,38 @@ class FirebaseServiceImpl implements BaseFirebaseService {
         .where((doc) => doc['role'] != role)
         .map((doc) => UserModel.fromMap(doc.data()))
         .toList();
+  }
+
+  @override
+  Future<void> verifyPhoneNumber({
+    required String phoneNumber,
+    required Function(String verificationId) codeSent,
+    required Function(FirebaseAuthException error) verificationFailed,
+    required Function(String verificationId, int? resendToken) codeAutoRetrievalTimeout,
+    required Function(PhoneAuthCredential credential) verificationCompleted,
+  }) async {
+    await _auth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      timeout: const Duration(seconds: 60),
+      verificationCompleted: verificationCompleted,
+      verificationFailed: verificationFailed,
+      codeSent: (verificationId, resendToken) => codeSent(verificationId),
+      codeAutoRetrievalTimeout: (verificationId) => codeAutoRetrievalTimeout(verificationId, null),
+    );
+  }
+
+  @override
+  Future<UserCredential> signInWithPhoneCredential(PhoneAuthCredential credential) {
+    return _auth.signInWithCredential(credential);
+  }
+
+  @override
+  PhoneAuthCredential getPhoneCredential(String verificationId, String smsCode) {
+    return PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
+  }
+
+  @override
+  Future<void> saveRide(Map<String, dynamic> rideData) async {
+    await FirebaseFirestore.instance.collection('rides').add(rideData);
   }
 }

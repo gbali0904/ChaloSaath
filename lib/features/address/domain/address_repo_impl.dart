@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:env_config/config/app_secrets.dart';
 import 'package:http/http.dart' as http;
 
-import '../../data_providers/domain/BaseFirebaseService.dart';
-import 'AddressRepo.dart';
+import '../../data_providers/domain/base_firebase_service.dart';
+import 'address_repo.dart';
 
 class AddressRepoImpl extends AddressRepo{
   final BaseFirebaseService _firebaseService;

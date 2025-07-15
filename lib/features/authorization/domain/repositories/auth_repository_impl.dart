@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../../data_providers/domain/BaseFirebaseService.dart';
+import '../../../data_providers/domain/base_firebase_service.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../data/user_model.dart';
 
@@ -10,7 +10,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<UserModel> registerUser({required UserModel userData}) async {
     try {
-      await _firebaseService.saveUserData(userData.email, userData.toJson());
+      await _firebaseService.saveUserData(userData.email, userData);
       return userData;  // Return the same user model after saving
     } on FirebaseAuthException catch (e) {
       throw Exception(e.message ?? 'Registration failed');

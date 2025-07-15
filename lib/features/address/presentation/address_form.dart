@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:chalosaath/features/address/presentation/AddressSearchBloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -15,10 +14,11 @@ import '../../authorization/data/user_model.dart';
 import '../../helper/CustomScaffold.dart';
 import '../../home/data/HomeEvent.dart';
 import '../../home/data/HomeState.dart';
-import '../../home/presentation/HomeBloc.dart';
+import '../../home/presentation/home_bloc.dart';
 import '../../loader/CustomLoader.dart';
 import '../data/AddressSearchEvent.dart';
 import '../data/AddressSearchState.dart';
+import 'address_search_bloc.dart';
 
 class AddressScreen extends StatefulWidget {
   final AddressSearchBloc bloc;
@@ -50,10 +50,21 @@ class _AddressScreenState extends State<AddressScreen> {
   @override
   void initState() {
     super.initState();
+    try {
     final userJson = getX<AppPreference>().getString(AppKey.userData);
+      if (userJson != null && userJson.isNotEmpty) {
     final map = jsonDecode(userJson);
     user = UserModel.fromMap(map);
     isAddress = user.isAddress ?? false;
+      } else {
+        user = UserModel.empty();
+        isAddress = false;
+      }
+    } catch (e) {
+      print('Error loading user data in address form: $e');
+      user = UserModel.empty();
+      isAddress = false;
+    }
 
     if(widget.arg == true && isAddress!){
       homeController.text = user.homeAddress.toString();
@@ -91,7 +102,7 @@ class _AddressScreenState extends State<AddressScreen> {
               } else if (state is HomeLoaded) {
                 await getX<AppPreference>().setString(
                   AppKey.userData,
-                  jsonEncode(state.userData),
+                  state.userData.toJson(),
                 );
                 setState(() {
                   isLoading = false;
