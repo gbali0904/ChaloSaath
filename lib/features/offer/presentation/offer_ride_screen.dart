@@ -15,13 +15,15 @@ class OfferRideScreen extends StatefulWidget {
   final OfferRideBloc offerRideBloc;
   final bool showAppBar;
   final bool showBottomBar;
+  final bool showtitle;
 
   const OfferRideScreen({
     super.key,
     required this.addressBloc,
     required this.offerRideBloc,
-    this.showAppBar = true,
+    this.showAppBar = false,
     this.showBottomBar = true,
+    this.showtitle = true,
   });
 
   @override
@@ -61,14 +63,7 @@ class _OfferRideScreenState extends State<OfferRideScreen> {
                 // Clear form fields after successful publish
                 pickupController.clear();
                 destinationController.clear();
-                context.read<OfferRideBloc>().add(PickupChanged(''));
-                context.read<OfferRideBloc>().add(DestinationChanged(''));
-                context.read<OfferRideBloc>().add(DateChanged(DateTime.now()));
-                context.read<OfferRideBloc>().add(TimeChanged(TimeOfDay.now()));
-                context.read<OfferRideBloc>().add(RecurringChanged(false));
-                context.read<OfferRideBloc>().add(SeatsChanged(1));
-                context.read<OfferRideBloc>().add(FareChanged(''));
-                context.read<OfferRideBloc>().add(NotesChanged(''));
+                context.read<OfferRideBloc>().add(ResetOfferRideForm());
               } else if (state.error != null) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(state.error!)),
@@ -80,7 +75,7 @@ class _OfferRideScreenState extends State<OfferRideScreen> {
         child: CustomBottomNavBar(
           context:context,
           appbarstatus: widget.showAppBar,
-          title: widget.showAppBar ? "Offer a Ride" : "",
+          title: widget.showtitle ? "Offer a Ride" : "",
           showBottomBar: widget.showBottomBar,
           body: BlocBuilder<OfferRideBloc, OfferRideState>(
             builder: (context, state) {

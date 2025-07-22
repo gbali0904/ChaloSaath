@@ -1,21 +1,21 @@
-# chalosaath
+# ChaloSaath
 
-A new Flutter project.
+A modern Flutter ride-sharing app with robust state management, Firebase integration, and a polished, user-friendly UI.
 
-## 🚀 Full Codebase Refactor (2024)
+## 🚀 Major Refactor & Feature Update (2024)
 
-This project has undergone a comprehensive refactor to improve maintainability, scalability, and code quality. The refactor includes:
+This project has recently undergone a comprehensive refactor and feature expansion to improve maintainability, scalability, and user experience.
 
-### ✨ Key Improvements
-- **Consistent File Naming:** All files now use `snake_case`.
-- **Centralized Constants & Theme:** All app-wide constants and theming are in `lib/core/constants/` and `lib/core/theme/`.
-- **Robust Utilities:** Common validation, formatting, and UI helpers are in `lib/core/utils/app_utils.dart`.
-- **Feature-based Structure:** Each feature (auth, address, home, onboarding, etc.) is isolated in its own folder with clear separation of data, domain, and presentation layers.
-- **Modern BLoC Pattern:** All BLoC, event, and state classes follow best practices for event-driven architecture.
-- **Improved Routing:** Centralized route constants and a robust route generator with error handling.
-- **Removed Duplicates/Unused Files:** The codebase is clean and free of legacy or duplicate files.
-- **Updated Imports:** All imports are relative and reflect the new structure.
-- **Enhanced Error Handling:** Consistent error and success messaging throughout the app.
+### ✨ Key Features & Improvements
+- **Modern Dashboard UI:** Redesigned home screen with a custom AppBar, tabbed search/offer row, "Where are you going?" card, upcoming rides section, and a bottom navigation bar.
+- **Reusable Widgets:** CustomTabBar and CustomBottomNavBar for consistent navigation and flexible tab usage across screens.
+- **Profile Redesign:** New profile screen with a custom AppBar, profile card, contact/vehicle info, and settings (including dark mode toggle).
+- **Dark Mode with BLoC:** Theme switching is managed by a full BLoC (not Cubit), with persistent user preference using AppPreference.
+- **Offer a Ride:** Dedicated screen for offering rides, using BLoC for state management, address autocomplete (reusing address feature), and saving ride data to Firebase with a rideTimestamp for querying.
+- **Upcoming Rides Query:** Home page shows only rides in the next 20 minutes (excluding current user's rides), with real-time Firebase queries.
+- **Robust State Management:** All business logic and state management use the full BLoC pattern, following best practices for event-driven architecture.
+- **Improved UX:** Modal loaders, form reset fixes, and navigation/theming consistency across screens.
+- **Clean Codebase:** Removed deprecated, duplicate, and unused files. All Cubit usage replaced with BLoC.
 
 ### 📁 Project Structure
 ```
@@ -34,7 +34,8 @@ lib/
     loader/            # Custom loader widget
     main/              # Main navigation screen
     onboarding/        # Onboarding screens, BLoC
-    profile/           # Profile screen
+    offer/             # Offer a Ride feature (BLoC, UI, Firebase)
+    profile/           # Profile screen (redesigned)
     splash/            # Splash screen
   main.dart            # App entry point
   services/
@@ -51,12 +52,13 @@ lib/
 - **Routes** in `RouteConstants` and `RouteGenerator` (lib/core/routes/)
 
 ### 🏗️ Best Practices
-- Use BLoC for all business logic and state management
+- Use **BLoC** for all business logic and state management (no Cubit)
 - Keep UI code in `presentation/`, business logic in `domain/`, and data sources in `data/`
 - Use dependency injection via `service_locator.dart`
 - Validate all user input using utilities
 - Use centralized error and success messages
 - Prefer relative imports within `lib/`
+- Persist user preferences (e.g., dark mode) using AppPreference
 
 ### 📝 How to Add a New Feature
 1. Create a new folder in `lib/features/`.
@@ -77,18 +79,14 @@ lib/
 - [google_fonts](https://pub.dev/packages/google_fonts)
 - [uuid](https://pub.dev/packages/uuid)
 - [equatable](https://pub.dev/packages/equatable)
+- [flutter_typeahead](https://pub.dev/packages/flutter_typeahead)
 
 ---
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+1. Clone the repo and run `flutter pub get`.
+2. Set up Firebase for your platforms (Android/iOS/Web) and add the required config files.
+3. Run the app with `flutter run`.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+For more details, see the [Flutter documentation](https://docs.flutter.dev/).

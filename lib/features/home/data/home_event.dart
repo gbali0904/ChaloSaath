@@ -10,3 +10,6 @@ class GetUserList extends HomeEvent {
   final String role;
   GetUserList(this.role);
 }
+class GetRideList extends HomeEvent {
+  GetRideList();
+}

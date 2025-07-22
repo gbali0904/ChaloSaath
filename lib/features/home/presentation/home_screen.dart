@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:chalosaath/core/routes/route_constants.dart';
-import 'package:chalosaath/features/home/data/HomeState.dart';
+import 'package:chalosaath/features/home/data/home_state.dart';
+import 'package:chalosaath/features/home/data/Ride.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/storage/app_key.dart';
@@ -11,7 +12,7 @@ import '../../../services/service_locator.dart';
 import '../../address/presentation/address_search_bloc.dart';
 import '../../authorization/data/user_model.dart';
 import '../../helper/custome_bottom_nav_bar.dart';
-import '../data/HomeEvent.dart';
+import '../data/home_event.dart';
 import 'home_bloc.dart';
 import '../../offer/presentation/offer_ride_screen.dart';
 import '../../offer/bloc/offer_ride_bloc.dart';
@@ -35,6 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
   List<UserModel> filteredData = [];
   int selectedTab = 0;
 
+  List<Ride> rideData = [];
+
   @override
   void initState() {
     super.initState();
@@ -44,7 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
         final map = jsonDecode(userJson);
         user = UserModel.fromMap(map);
         isAddress = user.isAddress ?? false;
-        widget.home_bloc.add(GetUserList(user.role));
+        // widget.home_bloc.add(GetUserList(user.role));
+        widget.home_bloc.add(GetRideList());
       } else {
         user = UserModel.empty();
         isAddress = false;
@@ -87,6 +91,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   data = state.userData;
                   filteredData = data;
                 });
+              } else if (state is RideDataSuccess) {
+                setState(() {
+                  isLoading = false;
+                  rideData = state.rideData;
+                });
               } else if (state is HomeError) {
                 setState(() {
                   isLoading = false;
@@ -111,12 +120,14 @@ class _HomeScreenState extends State<HomeScreen> {
       body: _buildBody(),
     );
   }
+
   AppBar _buildAppBar() {
     return AppBar(
       backgroundColor: AppColors.primary,
       elevation: 0,
       toolbarHeight: 70,
-      automaticallyImplyLeading: false, // Optional: hide back button
+      automaticallyImplyLeading: false,
+      // Optional: hide back button
       titleSpacing: 24,
       title: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,86 +162,90 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
   Widget _buildFindRideTab() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Where are you going card
-        Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          elevation: 0,
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: const [
-                    Icon(Icons.search, color: Color(0xFF8A94A6)),
-                    SizedBox(width: 8),
-                    Text(
-                      'Where are you going?',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
+        Visibility(
+          visible: false,
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            elevation: 0,
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: const [
+                      Icon(Icons.search, color: Color(0xFF8A94A6)),
+                      SizedBox(width: 8),
+                      Text(
+                        'Where are you going?',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16),
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Enter destination',
-                    prefixIcon: Icon(Icons.location_on_outlined),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: Color(0xFFE5E7EB)),
-                    ),
-                    filled: true,
-                    fillColor: Color(0xFFF8F9FB),
-                    isDense: true,
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 12,
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Enter destination',
+                      prefixIcon: Icon(Icons.location_on_outlined),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Color(0xFFE5E7EB)),
+                      ),
+                      filled: true,
+                      fillColor: Color(0xFFF8F9FB),
+                      isDense: true,
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 12,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: 16),
-                Row(
-                  children: [
-                    ElevatedButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.access_time, size: 18),
-                      label: const Text('Now'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Color(0xFF232B3B),
-                        elevation: 0,
-                        side: const BorderSide(color: Color(0xFFE5E7EB)),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                  SizedBox(height: 16),
+                  Row(
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () {},
+                        icon: const Icon(Icons.access_time, size: 18),
+                        label: const Text('Now'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Color(0xFF232B3B),
+                          elevation: 0,
+                          side: const BorderSide(color: Color(0xFFE5E7EB)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: 12),
-                    OutlinedButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.tune, size: 18),
-                      label: const Text('Filters'),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Color(0xFF232B3B),
-                        side: const BorderSide(color: Color(0xFFE5E7EB)),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                      SizedBox(width: 12),
+                      OutlinedButton.icon(
+                        onPressed: () {},
+                        icon: const Icon(Icons.tune, size: 18),
+                        label: const Text('Filters'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Color(0xFF232B3B),
+                          side: const BorderSide(color: Color(0xFFE5E7EB)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -238,48 +253,53 @@ class _HomeScreenState extends State<HomeScreen> {
         // Upcoming Rides
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             Text(
               'Upcoming Rides',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
-            Text(
-              'View All',
-              style: TextStyle(
-                color: Color(0xFF8A94A6),
-                fontWeight: FontWeight.w500,
+            Visibility(
+              visible: rideData.length > 5,
+              child: Text(
+                'View All',
+                style: TextStyle(
+                  color: Color(0xFF8A94A6),
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ],
         ),
         SizedBox(height: 10),
-        Expanded(
-          child: ListView.builder(
-            itemCount: filteredData.length,
-            itemBuilder: (context, index) {
-              final ride = filteredData[index];
-              return _buildRideCard(ride, index);
-            },
-          ),
-        ),
+        rideData.isNotEmpty
+            ? Expanded(
+                child: ListView.builder(
+                  itemCount: rideData.length,
+                  itemBuilder: (context, index) {
+                    final ride = rideData[index];
+                    return _buildRideCard(ride, index);
+                  },
+                ),
+              )
+            : Center(child: Text("No Ride Found")),
       ],
     );
   }
-  Widget _buildRideCard(UserModel ride, int index) {
-    // Dummy logic for status, time, price, etc. You can replace with real ride data fields.
+
+  Widget _buildRideCard(Ride ride, int index) {
     final isHosting = index % 2 == 0;
-    final status = isHosting ? 'Hosting' : 'Booked';
-    final time = isHosting ? '9:00 AM' : '6:30 PM';
-    final route = isHosting
-        ? 'Sector 14 → Cyber City'
-        : 'Society Gate → MG Road Metro';
-    final withWhom = isHosting ? 'with John Doe' : 'with Sarah Wilson';
-    final people = isHosting ? 3 : 1;
-    final price = isHosting ? '₹50' : '₹30';
+    final status = 'Booking';
+    final additional_note = ride.notes != "" ? ride.notes :"";
+    final time = ride.time;
+    final route =
+        "${ride.pickup.split(",").first} -> ${ride.destination.split(",").first}";
+    final withWhom = ride.rider!.fullName.toString();
+    final people = ride.seats;
+    final price = "₹${ride.fare}";
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      elevation: 0,
+      elevation: 10,
       color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -330,18 +350,31 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
+            const SizedBox(height: 4),
+            Text(withWhom, style: const TextStyle(color: Color(0xFF000000))),
             const SizedBox(height: 8),
             Text(
               route,
               style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
             ),
             const SizedBox(height: 4),
-            Text(withWhom, style: const TextStyle(color: Color(0xFF8A94A6))),
+            Text(additional_note ,style: const TextStyle(fontSize: 10, color: Colors.red)),
+                const SizedBox(height: 4),
+            Divider(),
+            const SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Icon(Icons.call, size: 40, color: AppColors.primary),
+                Icon(Icons.message, size: 40, color: AppColors.primary),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
+
   _buildBody() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -444,6 +477,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     offerRideBloc: getX<OfferRideBloc>(),
                     showAppBar: false,
                     showBottomBar: false,
+                    showtitle: false,
                   ),
           ),
         ],

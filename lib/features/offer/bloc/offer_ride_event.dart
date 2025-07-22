@@ -42,4 +42,6 @@ class NotesChanged extends OfferRideEvent {
   NotesChanged(this.notes);
 }
 
-class SubmitOfferRide extends OfferRideEvent {} 
+class SubmitOfferRide extends OfferRideEvent {}
+
+class ResetOfferRideForm extends OfferRideEvent {} 
