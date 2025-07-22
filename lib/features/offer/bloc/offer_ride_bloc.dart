@@ -24,6 +24,9 @@ class OfferRideBloc extends Bloc<OfferRideEvent, OfferRideState> {
     on<FareChanged>((event, emit) => emit(state.copyWith(fare: event.fare)));
     on<NotesChanged>((event, emit) => emit(state.copyWith(notes: event.notes)));
     on<SubmitOfferRide>(_onSubmit);
+    on<ResetOfferRideForm>((event, emit) {
+      emit(OfferRideState());
+    });
   }
 
   Future<void> _onSubmit(SubmitOfferRide event, Emitter<OfferRideState> emit) async {

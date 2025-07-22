@@ -63,14 +63,7 @@ class _OfferRideScreenState extends State<OfferRideScreen> {
                 // Clear form fields after successful publish
                 pickupController.clear();
                 destinationController.clear();
-                context.read<OfferRideBloc>().add(PickupChanged(''));
-                context.read<OfferRideBloc>().add(DestinationChanged(''));
-                context.read<OfferRideBloc>().add(DateChanged(DateTime.now()));
-                context.read<OfferRideBloc>().add(TimeChanged(TimeOfDay.now()));
-                context.read<OfferRideBloc>().add(RecurringChanged(false));
-                context.read<OfferRideBloc>().add(SeatsChanged(1));
-                context.read<OfferRideBloc>().add(FareChanged(''));
-                context.read<OfferRideBloc>().add(NotesChanged(''));
+                context.read<OfferRideBloc>().add(ResetOfferRideForm());
               } else if (state.error != null) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(state.error!)),

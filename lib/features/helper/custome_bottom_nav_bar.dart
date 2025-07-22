@@ -84,7 +84,7 @@ class CustomBottomNavBar extends StatelessWidget {
   }
 
   void onTabChanged(int index, BuildContext context) {
-    if (index == 3) {
+    if (index == 2) {
       Navigator.pushReplacementNamed(context, RouteConstants.profile);
     } else if (index == 1) {
       Navigator.pushReplacementNamed(context, RouteConstants.home);
